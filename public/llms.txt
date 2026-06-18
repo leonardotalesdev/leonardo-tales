@@ -1,0 +1,27 @@
+# Leonardo Tales
+
+Leonardo Tales is an AI-agent operating system for autonomous workflows, intelligent integrations, and self-healing digital infrastructure.
+
+Default language: Turkish
+Secondary language: English
+
+Core concepts:
+- AI agents
+- Autonomous workflows
+- Intelligent integrations
+- Multi-agent orchestration
+- Long-term memory and knowledge systems
+- Self-healing automation
+- Secure, scalable digital infrastructure
+
+Primary routes:
+- / — Turkish homepage
+- /en — English homepage
+- /manifesto — Turkish manifesto
+- /en/manifesto — English manifesto
+
+Who it helps:
+Leonardo Tales helps founders, teams, and digital businesses design agentic systems that can coordinate work, integrate with existing tools, automate workflows, and improve operational intelligence.
+
+What it builds:
+Leonardo Tales builds multi-agent frameworks, cognitive integration layers, edge-scale memory infrastructure, and self-healing automation loops.
