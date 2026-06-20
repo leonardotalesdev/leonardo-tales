@@ -1,29 +1,72 @@
 # Leonardo Tales
 
-Leonardo Tales — an AI-agent operating system for autonomous workflows, intelligent integrations, and self-healing digital infrastructure.
+**Leonardo Tales — Yapay Zekâ Ajan İşletim Sistemi**
 
-## Overview
+Leonardo Tales is an MVP-stage website and AI discovery assistant concept for helping Turkish businesses understand where AI agents can improve customer support, sales, quoting, and operations.
 
-Leonardo Tales is a premium tech-noir web prototype for presenting agentic operating systems, multi-agent workflows, intelligent integrations, edge-scale memory infrastructure, and self-healing automation loops.
+The current site is a premium terminal-like AI operating system prototype. Preserve the existing dark grid, amber/green system colors, boot logs, command-line feel, and text-based wordmark.
 
-The default site language is Turkish. English is available at `/en`.
+## Product Focus
 
-## Routes
+Initial market: Türkiye
 
-- `/` — Turkish homepage
-- `/en` — English homepage
-- `/manifesto` — Turkish manifesto
-- `/en/manifesto` — English manifesto
-- `/llms.txt` — AI-readable project summary
-- `/robots.txt` — crawler rules
-- `/sitemap.xml` — sitemap with Turkish and English routes
+Initial language: Turkish
+
+Domain target: `leonardotales.com`
+
+Product sequence:
+
+1. AI Müşteri Temsilcisi + Website
+2. AI Satış ve Teklif Sistemi
+3. AI Operasyon Otomasyonu
+
+MVP goal: a visitor enters the site, is greeted by the AI discovery assistant, explains their business and need, and the system classifies the lead into one of four paths:
+
+1. AI Müşteri Temsilcisi + Website
+2. AI Satış ve Teklif Sistemi
+3. AI Operasyon Otomasyonu
+4. Henüz Netleşmedi
+
+The system should later collect contact information and store it as a lead.
+
+## Current Routes
+
+- `/` - Turkish homepage
+- `/en` - English homepage
+- `/manifesto` - Turkish manifesto
+- `/en/manifesto` - English manifesto
+- `/llms.txt` - AI-readable project summary
+- `/robots.txt` - crawler rules
+- `/sitemap.xml` - sitemap with Turkish and English routes
 
 ## Tech Stack
 
-- Next.js App Router
+- Next.js 16 App Router
+- React 19
 - TypeScript
-- Tailwind CSS
-- React
+- Tailwind CSS 4
+- npm with `package-lock.json`
+
+## Current Implementation Status
+
+Working:
+
+- Static bilingual marketing pages.
+- Manifesto pages.
+- SEO metadata, robots, and sitemap generation.
+- Static infrastructure imagery under `public/images/infrastructure`.
+- Client-side chat prototype in `src/components/CoreAiChat.tsx`.
+
+Not implemented yet:
+
+- Real LLM assistant.
+- Lead classification logic.
+- Contact form inside the chat panel.
+- Supabase lead storage.
+- Telegram or WhatsApp notifications.
+- Pricing flow.
+
+Do not claim these integrations are complete until they are implemented and verified.
 
 ## Local Development
 
@@ -34,15 +77,28 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-## Production Checks
+## Checks
 
 ```bash
 npm run lint
 npm run build
 ```
 
-The project does not require backend services, API keys, Supabase, OpenAI, or other private environment variables for the current visual prototype.
+## Environment
 
-## Deployment
+The current visual prototype does not require private environment variables.
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before deployment if the final domain differs from `https://leonardotales.com`.
+
+Never commit `.env*` files.
+
+## Project OS Docs
+
+Codex-readable project documentation lives in `docs/`.
+
+Start with:
+
+- `docs/00_PROJECT_BRIEF.md`
+- `docs/03_MVP_SCOPE.md`
+- `docs/05_TECHNICAL_ARCHITECTURE.md`
+- `docs/11_DO_NOT_TOUCH.md`
