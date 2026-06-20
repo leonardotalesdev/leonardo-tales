@@ -78,6 +78,9 @@ Verified in repo:
 - Static Next.js website.
 - Static images.
 - Metadata, sitemap, robots.
+- Deterministic local discovery assistant.
+- In-chat contact form with client-side validation.
+- Lead draft stored in local component state.
 
 Not verified or not implemented:
 
@@ -87,7 +90,7 @@ Not verified or not implemented:
 - WhatsApp.
 - Resend.
 - Vercel project linking.
-- Contact form persistence.
+- Contact form persistence beyond the active browser session.
 
 ## Environment Variables
 

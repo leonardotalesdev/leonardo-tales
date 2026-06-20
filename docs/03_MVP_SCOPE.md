@@ -57,3 +57,22 @@ The MVP is a public website with a functional AI discovery assistant that classi
 - The contact form appears only after enough context is gathered.
 - No pricing is quoted.
 - No unverified integrations are presented as live.
+
+## Sprint 1 Implementation Status
+
+Implemented locally:
+
+- Deterministic client-side discovery flow.
+- Turkish-first assistant prompts.
+- One-question-at-a-time conversation.
+- Local classification into the four MVP paths.
+- In-chat contact form.
+- Client-side required field and email validation.
+- Lead draft stored in React component state only.
+
+Still not implemented:
+
+- Backend persistence.
+- Supabase insert.
+- Telegram or WhatsApp notification.
+- LLM-powered assistant behavior.

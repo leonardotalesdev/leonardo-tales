@@ -12,6 +12,8 @@ Status: in progress during this documentation sprint.
 
 ## Sprint 1 - Discovery Assistant Prototype
 
+Status: completed.
+
 Goal: convert `CoreAiChat` from fixed response prototype into a deterministic discovery flow without external integrations.
 
 Tasks:
@@ -23,6 +25,68 @@ Tasks:
 - Add in-chat contact form UI.
 - Keep all data local/no persistence for this sprint.
 - Add basic tests if practical.
+
+Result:
+
+- Implemented in `src/components/CoreAiChat.tsx`.
+- Added minimal matching CSS in `src/app/globals.css`.
+- No external service was added.
+- No automated tests exist in the repo yet.
+
+## Sprint 1.1 - Discovery Assistant UX + Copy Calibration
+
+Status: completed.
+
+Goal: refine chat behavior, copy, form UX, and readability before backend/API integration.
+
+Tasks:
+
+- Replace cold technical user-facing wording.
+- Improve the initial assistant greeting.
+- Add pricing-question handling without quoting prices.
+- Ensure the form opens only after confirmation.
+- Hide the form after valid local submission.
+- Keep one active form at a time.
+- Improve chat message readability without changing brand colors.
+- Make left protocol panel status values intentional.
+
+Result:
+
+- Calibrated Turkish-first assistant copy.
+- Replaced user-facing "sürtünme" wording with clearer "zorlayan süreç" language.
+- Added deterministic price-intent response.
+- Kept submitted leads in local component state only.
+- Confirmed no external service, backend route, or API integration was added.
+
+## Sprint 1.2 - Short Business-Aware Lead Capture Flow
+
+Status: completed.
+
+Goal: shorten the deterministic assistant flow while making it warmer and more business-aware.
+
+Tasks:
+
+- Strengthen classification for website + AI assistant/customer reception intents.
+- Map sales/proposal language to `AI Satış ve Teklif Sistemi`.
+- Map operations/task/workflow language to `AI Operasyon Otomasyonu`.
+- Avoid detailed follow-up questions once the need is already clear.
+- Ask only one simple clarifying question when the need is unclear.
+- Respond lightly to casual/no-intent visitors without pushing the form.
+- Add short business-specific explanation for clear business types.
+- Offer the form after clear confirmation or continued interest.
+- Keep pricing response authority-bounded and number-free.
+- Keep confirmations short and user-facing.
+- Keep left panel status values coherent.
+
+Result:
+
+- Added weighted deterministic scoring and phrase/combination boosts.
+- Added short lead-capture confirmations instead of long discovery summaries.
+- Added one-question unclear flow.
+- Added business-aware explanation for examples such as beauty center and real estate office.
+- Added casual/no-intent handling that asks what the visitor does.
+- Preserved local-only form storage and existing terminal visual language.
+- Confirmed no external integration was added.
 
 ## Sprint 2 - Lead Capture Backend
 

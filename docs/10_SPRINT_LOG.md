@@ -45,3 +45,122 @@ Checks:
 Next safest sprint:
 
 Build a deterministic, no-external-service discovery assistant flow inside the existing `CoreAiChat` UI.
+
+## 2026-06-20 - Sprint 1 Discovery Assistant
+
+Scope:
+
+- Convert `CoreAiChat` from fixed response prototype into a deterministic local discovery flow.
+- Preserve the terminal-like Leonardo Tales AI OS visual language.
+- Add in-chat contact form without external services.
+- Keep lead data in component state only.
+
+Implemented:
+
+- Added `DiscoveryCategory`, `DiscoveryStep`, `DiscoveryMessage`, `LeadDraft`, and `ContactPreference` types.
+- Added a step-based flow: business description, friction question, classification, contact prompt, contact form, completion.
+- Added local keyword-based classification into the four MVP paths.
+- Added an in-chat contact form with required field and email validation.
+- Stored submitted lead drafts in React component state.
+- Added compact terminal-style form CSS.
+
+Still not connected:
+
+- LLM assistant.
+- Supabase persistence.
+- Telegram or WhatsApp notifications.
+- Backend lead submission route.
+- Email/Resend.
+
+Checks:
+
+- `npm run lint` passed.
+- `npm run build` passed.
+- No automated test script exists in `package.json`.
+
+Next safest sprint:
+
+Connect the validated lead draft to a small server-side lead submission boundary, then add Supabase persistence and Telegram notification behind verified environment variables.
+
+## 2026-06-20 - Sprint 1.1 Discovery Assistant UX + Copy Calibration
+
+Scope:
+
+- Refine assistant copy and chat behavior.
+- Improve the initial Turkish greeting.
+- Replace cold technical wording in user-facing prompts.
+- Add deterministic no-price-quote response.
+- Improve form UX after successful local submit.
+- Preserve existing terminal-like visual language.
+
+Implemented:
+
+- Opened the chat with a polished discovery-agent greeting instead of technical boot logs.
+- Replaced user-facing "sürtünme" copy with "sizi en çok zorlayan süreç" language.
+- Added pricing-intent detection and a no-price-quote policy response.
+- Kept the form closed until the visitor confirms with intent like "evet", "tamam", "formu aç", or "iletişim".
+- Hid the contact form after successful local submission.
+- Reset the visible form draft while keeping the submitted lead in local state.
+- Updated left panel status values: `MODE: LOCAL`, `PATH: WAITING/category`, `LEAD: LOCAL/DRAFT/READY`.
+- Darkened the chat message area slightly for readability without changing brand colors.
+
+Still not connected:
+
+- LLM assistant.
+- Supabase persistence.
+- Telegram or WhatsApp notifications.
+- Backend/API route.
+- Email/Resend.
+
+Checks:
+
+- `npm run lint` passed.
+- `npm run build` passed.
+- No automated test script exists in `package.json`.
+
+Next safest sprint:
+
+Commit Sprint 1 + Sprint 1.1 together, then add a small server-side lead submission boundary before connecting Supabase and Telegram.
+
+## 2026-06-20 - Sprint 1.2 Short Business-Aware Lead Capture Flow
+
+Scope:
+
+- Improve deterministic classification.
+- Shorten the conversation so clear leads are not over-questioned.
+- Make the assistant act more like a warm AI customer representative.
+- Ask at most one clarifying question for unclear leads.
+- Avoid pushing the form for casual/no-intent visitors.
+- Refine form timing.
+- Keep pricing response clear and authority-bounded.
+- Preserve terminal-like visual language.
+
+Implemented:
+
+- Added weighted classifier boosts for combinations like web sitesi + AI asistan, web sitesi + müşteri karşılama, emlak ofisi + web/customer assistant, chatbot, WhatsApp customer reception.
+- Updated path status codes to `WAITING`, `SUPPORT_WEB`, `SALES_PROPOSAL`, `OPERATIONS`, and `UNCLEAR`.
+- Added customer-services-system and customer-representative boosts for support/web classification.
+- Replaced longer discovery summaries with short business-aware user-facing confirmations.
+- Added business-specific explanation for beauty centers and real estate offices.
+- Added casual/no-intent handling for messages like "Canım sıkıldı", "Öylesine yazdım", or "Sadece bakıyorum".
+- Changed unclear handling to one clarifying question, then contact-form offer if the need remains unclear.
+- Kept form opening gated behind user confirmation or explicit contact intent.
+- Preserved local-only lead draft behavior.
+
+Still not connected:
+
+- LLM assistant.
+- Supabase persistence.
+- Telegram or WhatsApp notifications.
+- Backend/API route.
+- Email/Resend.
+
+Checks:
+
+- `npm run lint` passed.
+- `npm run build` passed.
+- No automated test script exists in `package.json`.
+
+Next safest sprint:
+
+Commit Sprint 1 + Sprint 1.1 + Sprint 1.2 together, then add a small server-side lead submission boundary before Supabase and Telegram integration.
