@@ -80,6 +80,7 @@ const chatCopy = {
     status: "[YEREL_MOD]",
     inputLabel: "Keşif asistanına cevap yaz",
     submit: "GÖNDER",
+    processing: "Yanıt hazırlanıyor...",
     prompts: {
       business: "İşinizi veya ihtiyacınızı yazın...",
       friction: "İşinizi veya ihtiyacınızı yazın...",
@@ -144,6 +145,7 @@ const chatCopy = {
     status: "[LOCAL_MODE]",
     inputLabel: "Reply to the discovery assistant",
     submit: "SEND",
+    processing: "Preparing response...",
     prompts: {
       business: "Describe your business or need...",
       friction: "Describe your business or need...",
@@ -210,6 +212,7 @@ const chatCopy = {
     status: string;
     inputLabel: string;
     submit: string;
+    processing: string;
     prompts: Record<DiscoveryStep, string>;
     messages: DiscoveryMessage[];
     frictionQuestion: string;
@@ -235,6 +238,7 @@ const chatCopy = {
 >;
 
 const protocolAgents = ["[Discovery_Agent]", "[Classifier_Agent]", "[Lead_Form]"];
+const responseDelayMs = 720;
 
 const categoryKeywords: Record<DiscoveryCategory, string[]> = {
   customer_support_website: [
@@ -697,17 +701,31 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   const [leadDraft, setLeadDraft] = useState<LeadDraft>(emptyLeadDraft);
   const [submittedLead, setSubmittedLead] = useState<SubmittedLead | null>(null);
   const [formError, setFormError] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const responseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messageIdRef = useRef(
     Math.max(...copy.messages.map((message) => message.id)) + 1,
   );
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current.scrollHeight,
-      behavior: "smooth",
+    const animationFrame = requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: step === "contact_form" ? "auto" : "smooth",
+      });
     });
-  }, [messages, step, formError]);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [messages, step, formError, isProcessing]);
+
+  useEffect(() => {
+    return () => {
+      if (responseTimerRef.current) {
+        clearTimeout(responseTimerRef.current);
+      }
+    };
+  }, []);
 
   function createMessage(
     role: DiscoveryMessage["role"],
@@ -729,24 +747,14 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     setMessages((currentMessages) => [...currentMessages, ...nextMessages]);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const trimmedCommand = command.trim();
-    if (!trimmedCommand) {
-      return;
-    }
-
-    const userMessage = createMessage("user", trimmedCommand);
-    const nextMessages: DiscoveryMessage[] = [userMessage];
-
+  function prepareAssistantResponse(trimmedCommand: string) {
+    const nextMessages: DiscoveryMessage[] = [];
     if (asksForPricing(trimmedCommand) || asksForProposal(trimmedCommand)) {
       nextMessages.push(createMessage("agent", copy.pricingReply, "gold"));
       if (step !== "contact_form" && step !== "completed") {
         setStep("contact_prompt");
       }
       appendMessages(nextMessages);
-      setCommand("");
       return;
     }
 
@@ -754,7 +762,6 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       setStep("contact_form");
       nextMessages.push(createMessage("agent", copy.openFormHint, "gold"));
       appendMessages(nextMessages);
-      setCommand("");
       return;
     }
 
@@ -764,7 +771,6 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
         setStep("business");
         nextMessages.push(createMessage("agent", copy.casualReply, "gold"));
         appendMessages(nextMessages);
-        setCommand("");
         return;
       }
 
@@ -781,7 +787,6 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
           ),
         );
         appendMessages(nextMessages);
-        setCommand("");
         return;
       }
 
@@ -818,7 +823,6 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
         setStep("contact_prompt");
         nextMessages.push(createMessage("agent", copy.unclearContactOffer, "gold"));
         appendMessages(nextMessages);
-        setCommand("");
         return;
       }
 
@@ -860,7 +864,25 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     }
 
     appendMessages(nextMessages);
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const trimmedCommand = command.trim();
+    if (!trimmedCommand || isProcessing) {
+      return;
+    }
+
+    appendMessages([createMessage("user", trimmedCommand)]);
     setCommand("");
+    setIsProcessing(true);
+
+    responseTimerRef.current = setTimeout(() => {
+      prepareAssistantResponse(trimmedCommand);
+      setIsProcessing(false);
+      responseTimerRef.current = null;
+    }, responseDelayMs);
   }
 
   function updateLeadDraft<Field extends keyof LeadDraft>(
@@ -989,6 +1011,13 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
             </div>
           ))}
 
+          {isProcessing ? (
+            <div className="chat-message chat-message-agent chat-message-processing">
+              <span className="chat-message-prefix">[AI]</span>
+              <span className="chat-message-text tone-neon">{copy.processing}</span>
+            </div>
+          ) : null}
+
           {step === "contact_form" ? (
             <form className="core-chat-contact-panel" onSubmit={handleLeadSubmit}>
               <div className="core-chat-contact-header">
@@ -1091,6 +1120,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
             <input
               aria-label={copy.inputLabel}
               className="core-chat-input"
+              disabled={isProcessing}
               onChange={(event) => setCommand(event.target.value)}
               placeholder={placeholder}
               suppressHydrationWarning
@@ -1098,8 +1128,8 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
               value={command}
             />
           </div>
-          <button className="core-chat-submit" type="submit">
-            {copy.submit}
+          <button className="core-chat-submit" disabled={isProcessing} type="submit">
+            {isProcessing ? "..." : copy.submit}
           </button>
         </form>
       </section>
