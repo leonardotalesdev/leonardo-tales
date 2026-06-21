@@ -1108,6 +1108,13 @@ h3 {
   border-color: var(--accent-gold);
 }
 
+.core-chat-form-grid input:disabled,
+.core-chat-form-grid select:disabled,
+.core-chat-form-grid textarea:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .core-chat-form-wide {
   grid-column: 1 / -1;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import type { LeadSubmissionResult } from "@/lib/leads/types";
 
 type DiscoveryCategory =
   | "customer_support_website"
@@ -724,6 +725,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   const [submittedLead, setSubmittedLead] = useState<SubmittedLead | null>(null);
   const [formError, setFormError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const responseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messageIdRef = useRef(
@@ -739,7 +741,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     });
 
     return () => cancelAnimationFrame(animationFrame);
-  }, [messages, step, formError, isProcessing]);
+  }, [messages, step, formError, isProcessing, isSubmittingLead]);
 
   useEffect(() => {
     return () => {
@@ -925,8 +927,12 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     setFormError("");
   }
 
-  function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmittingLead) {
+      return;
+    }
 
     if (
       !leadDraft.name.trim() ||
@@ -965,11 +971,53 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       createdAt: new Date().toISOString(),
     };
 
-    setSubmittedLead(nextLead);
-    setStep("completed");
     setFormError("");
-    setLeadDraft(emptyLeadDraft);
-    appendMessages([createMessage("agent", copy.success, "neon")]);
+    setIsSubmittingLead(true);
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: nextLead.name,
+          email: nextLead.email,
+          phone: nextLead.phone,
+          company_or_project: nextLead.company_or_project,
+          website: nextLead.website,
+          preferred_contact_channel: nextLead.preferred_contact_channel,
+          note: nextLead.note,
+          business_type: nextLead.business_type,
+          detected_need: nextLead.detected_need,
+          category: nextLead.category,
+          source: nextLead.source,
+          status: nextLead.status,
+          conversation_summary: nextLead.conversation_summary,
+          next_action: nextLead.next_action,
+        }),
+      });
+      const result = (await response.json()) as LeadSubmissionResult;
+
+      if (!response.ok || !result.ok) {
+        setFormError(
+          result.message ||
+            "Form gönderilemedi. Lütfen bilgileri kontrol edip tekrar deneyin.",
+        );
+        return;
+      }
+
+      setSubmittedLead(nextLead);
+      setStep("completed");
+      setLeadDraft(emptyLeadDraft);
+      appendMessages([createMessage("agent", result.message || copy.success, "neon")]);
+    } catch {
+      setFormError(
+        "Form gönderilemedi. Bağlantınızı kontrol edip tekrar deneyebilirsiniz.",
+      );
+    } finally {
+      setIsSubmittingLead(false);
+    }
   }
 
   const placeholder = copy.prompts[step];
@@ -1060,6 +1108,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                   <span>{copy.fields.name}</span>
                   <input
                     autoComplete="name"
+                    disabled={isSubmittingLead}
                     onChange={(event) => updateLeadDraft("name", event.target.value)}
                     required
                     type="text"
@@ -1070,6 +1119,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                   <span>{copy.fields.email}</span>
                   <input
                     autoComplete="email"
+                    disabled={isSubmittingLead}
                     onChange={(event) => updateLeadDraft("email", event.target.value)}
                     required
                     type="email"
@@ -1080,6 +1130,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                   <span>{copy.fields.phone}</span>
                   <input
                     autoComplete="tel"
+                    disabled={isSubmittingLead}
                     onChange={(event) => updateLeadDraft("phone", event.target.value)}
                     type="tel"
                     value={leadDraft.phone}
@@ -1089,6 +1140,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                   <span>{copy.fields.company}</span>
                   <input
                     autoComplete="organization"
+                    disabled={isSubmittingLead}
                     onChange={(event) =>
                       updateLeadDraft("company_or_project", event.target.value)
                     }
@@ -1101,6 +1153,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                   <span>{copy.fields.website}</span>
                   <input
                     autoComplete="url"
+                    disabled={isSubmittingLead}
                     onChange={(event) => updateLeadDraft("website", event.target.value)}
                     type="url"
                     value={leadDraft.website}
@@ -1109,6 +1162,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                 <label>
                   <span>{copy.fields.preference}</span>
                   <select
+                    disabled={isSubmittingLead}
                     onChange={(event) =>
                       updateLeadDraft(
                         "preferred_contact_channel",
@@ -1127,6 +1181,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                 <label className="core-chat-form-wide">
                   <span>{copy.fields.note}</span>
                   <textarea
+                    disabled={isSubmittingLead}
                     onChange={(event) => updateLeadDraft("note", event.target.value)}
                     rows={3}
                     value={leadDraft.note}
@@ -1136,8 +1191,12 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
 
               {formError ? <p className="core-chat-form-error">{formError}</p> : null}
 
-              <button className="core-chat-submit core-chat-contact-submit" type="submit">
-                {copy.formSubmit}
+              <button
+                className="core-chat-submit core-chat-contact-submit"
+                disabled={isSubmittingLead}
+                type="submit"
+              >
+                {isSubmittingLead ? "GÖNDERİLİYOR..." : copy.formSubmit}
               </button>
             </form>
           ) : null}

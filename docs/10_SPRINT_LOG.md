@@ -197,3 +197,48 @@ Checks:
 Next safest sprint:
 
 Add a small server-side lead submission boundary with validation before connecting Supabase or Telegram.
+
+## 2026-06-21 - Sprint 2 Server-side Lead Submission Boundary
+
+Scope:
+
+- Create a safe server-side API boundary for lead form submission.
+- Add shared lead types and validation helpers.
+- Prepare Supabase persistence without exposing service keys to the browser.
+- Prepare Telegram notification without claiming it works before verification.
+- Keep deterministic assistant behavior and premium chat UI intact.
+
+Implemented:
+
+- Added `POST /api/leads` Route Handler.
+- Added `src/lib/leads/types.ts` and `src/lib/leads/validation.ts`.
+- Added `src/lib/leads/supabase.ts` using server-side REST insert preparation.
+- Added `src/lib/notifications/telegram.ts` using server-side Telegram API preparation.
+- Added `supabase/migrations/001_create_leads.sql` with a `public.leads` table, constraints, indexes, RLS enabled, and a service-role policy.
+- Added `.env.example` with placeholders only.
+- Updated `CoreAiChat` so valid form submissions go through `/api/leads`.
+- Added submit loading behavior and kept the form open on API failure.
+
+Runtime behavior:
+
+- `LEADS_STORAGE_MODE=local` returns local-only success for development and does not claim Supabase persistence.
+- Supabase mode requires `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; missing env vars return setup-aware failure.
+- Telegram notification runs only server-side and reports `not_configured` when env vars are missing.
+- Telegram success is not required for lead storage success.
+
+Still not verified:
+
+- Live Supabase insert against the created project.
+- Applied migration in the remote Supabase database.
+- Supabase Data API exposure for the `leads` table.
+- Live Telegram bot/chat delivery.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Next safest sprint:
+
+Apply the Supabase migration to the real project, set production env vars, and run one end-to-end lead submission smoke test before enabling Telegram notifications.

@@ -24,6 +24,7 @@ Observed local versions during documentation sprint:
 src/app/
   layout.tsx
   page.tsx
+  api/leads/route.ts
   en/page.tsx
   manifesto/page.tsx
   en/manifesto/page.tsx
@@ -34,6 +35,15 @@ src/components/
   CoreAiChat.tsx
   HomePage.tsx
   ManifestoPage.tsx
+
+src/lib/
+  leads/types.ts
+  leads/validation.ts
+  leads/supabase.ts
+  notifications/telegram.ts
+
+supabase/
+  migrations/001_create_leads.sql
 
 public/
   llms.txt
@@ -79,18 +89,21 @@ Verified in repo:
 - Static images.
 - Metadata, sitemap, robots.
 - Deterministic local discovery assistant.
-- In-chat contact form with client-side validation.
-- Lead draft stored in local component state.
+- In-chat contact form with client-side validation and server-side API submission boundary.
+- Server-side lead payload validation.
+- Supabase REST insert helper prepared for server-side `service_role` usage.
+- Telegram notification helper prepared for server-side bot notifications.
+- Supabase migration file for the `public.leads` table.
 
 Not verified or not implemented:
 
 - OpenAI or other LLM provider.
-- Supabase.
-- Telegram.
+- Supabase runtime persistence against the live project.
+- Telegram runtime notification against the live bot/chat.
 - WhatsApp.
 - Resend.
 - Vercel project linking.
-- Contact form persistence beyond the active browser session.
+- Production lead follow-up workflow.
 
 ## Environment Variables
 
@@ -98,9 +111,41 @@ Current public variable:
 
 - `NEXT_PUBLIC_SITE_URL` - optional production origin override.
 
-No private env vars are required for the current visual prototype.
+Private env vars prepared for Sprint 2:
+
+- `SUPABASE_URL` - Supabase project URL for server-side lead persistence.
+- `SUPABASE_SERVICE_ROLE_KEY` - server-only service role key. Never expose to the client.
+- `TELEGRAM_BOT_TOKEN` - server-only Telegram bot token.
+- `TELEGRAM_CHAT_ID` - Telegram destination chat id.
+- `LEADS_STORAGE_MODE` - `local`, `supabase`, or `none`; `.env.example` defaults to `local`.
+- `LEADS_NOTIFICATION_MODE` - `none` or `telegram`; `.env.example` defaults to `none`.
+- `OPENAI_API_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFICATION_EMAIL` are placeholders for later sprints only.
 
 `.env*` is ignored by `.gitignore`; do not commit secrets.
+
+## Lead Submission Boundary
+
+`POST /api/leads` accepts normalized JSON from the chat form.
+
+Server behavior:
+
+- Parses JSON and validates required fields.
+- Requires name, valid email, and company/project.
+- Trims and normalizes optional lead fields.
+- Returns `400` for invalid input.
+- Uses `LEADS_STORAGE_MODE=local` for local-only testing.
+- Uses Supabase REST insert when storage mode is Supabase and `SUPABASE_URL` plus `SUPABASE_SERVICE_ROLE_KEY` are present.
+- Returns setup-aware `500` responses when storage is unavailable instead of faking success.
+- Attempts Telegram notification after storage succeeds, but lead storage does not depend on Telegram success.
+- Does not log private lead details.
+
+The browser must not import or reference private Supabase or Telegram secrets.
+
+Supabase note:
+
+- The prepared helper uses the Supabase Data API (`/rest/v1/leads`).
+- New Supabase tables may need to be explicitly exposed to the Data API in project settings before REST inserts work.
+- RLS is enabled in the migration, and the app is designed to write through the server-side service role key only.
 
 ## Deployment Readiness
 

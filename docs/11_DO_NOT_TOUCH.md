@@ -27,12 +27,14 @@ Do not:
 
 Do not claim these are working unless implemented and verified:
 
-- Supabase.
-- Telegram.
+- Supabase live persistence.
+- Telegram live notifications.
 - WhatsApp.
 - Vercel deployment/project linking.
 - Resend.
 - OpenAI or any other LLM provider.
+
+Sprint 2 includes a server-side lead API boundary plus Supabase and Telegram preparation code. This is not the same as a verified production integration. Only claim live persistence or notification after env vars, migration, and runtime smoke tests pass.
 
 ## Secrets
 
@@ -42,6 +44,7 @@ Do not:
 - Print secrets in logs.
 - Put API keys in client components.
 - Initialize private service clients at module scope in files that may be evaluated during build.
+- Prefix private Supabase, Telegram, OpenAI, or Resend secrets with `NEXT_PUBLIC_`.
 
 ## Assistant Behavior
 

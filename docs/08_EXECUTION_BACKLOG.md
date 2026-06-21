@@ -123,6 +123,8 @@ Result:
 
 ## Sprint 2 - Lead Capture Backend
 
+Status: completed as server-side boundary and integration preparation.
+
 Goal: store classified leads safely.
 
 Tasks:
@@ -134,6 +136,19 @@ Tasks:
 - Insert lead into Supabase.
 - Do not commit `.env*`.
 - Verify locally with real env vars.
+
+Result:
+
+- Chose `POST /api/leads` Route Handler.
+- Added shared lead types and server-side validation.
+- Added Supabase REST insert helper using server-only `SUPABASE_SERVICE_ROLE_KEY`.
+- Added Telegram notification helper using server-only bot env vars.
+- Added `supabase/migrations/001_create_leads.sql`.
+- Added `.env.example` with placeholder env names only.
+- Updated `CoreAiChat` to submit form data through the API route.
+- Kept form open when API submission fails.
+- No OpenAI, WhatsApp, Resend, dashboard, or admin panel was added.
+- Live Supabase insert and Telegram notification still require real env vars and applied migration verification.
 
 ## Sprint 3 - Lead Notifications
 
