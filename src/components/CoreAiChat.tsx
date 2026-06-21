@@ -102,6 +102,8 @@ const chatCopy = {
       "Bu normal. Henüz netleşmediyse önce en temel noktayı seçelim: web sitesi ve müşteri karşılama, satış/teklif süreci veya operasyon/iş akışı tarafında mı ilerleyelim?",
     casualReply:
       "Anladım, sorun değil. Leonardo Tales en çok işletmeler, ajanslar ve profesyonel hizmetler için yapay zekâ destekli web sitesi ve müşteri karşılama sistemleri kurar. Siz ne işle uğraşıyorsunuz?",
+    greetingReply:
+      "Merhaba. İşinizi, projenizi veya kurmak istediğiniz yapay zekâ sistemini kısaca yazın; sizi doğru başlangıç noktasına yönlendireyim.",
     unclearContactOffer:
       "Sizi anlıyorum. İhtiyaç henüz tam netleşmemiş olabilir. Bu durumda kısa bir ön görüşme daha doğru olur. Sistem yetkilisinin size ulaşabilmesi için iletişim formunu açabilirim.",
     technicalGuidance:
@@ -167,6 +169,8 @@ const chatCopy = {
       "That is normal. If it is not clear yet, choose the closest starting point: website/customer reception, sales/proposals, or operations/workflows?",
     casualReply:
       "Understood, no problem. Leonardo Tales mostly builds AI-supported websites and customer reception systems for businesses, agencies, and professional services. What kind of work do you do?",
+    greetingReply:
+      "Hello. Briefly describe your business, project, or the AI system you want to build; I will guide you to the right starting point.",
     unclearContactOffer:
       "I understand. The need may not be fully clear yet. A short initial conversation would be more useful. I can open the contact form so the system owner can reach you.",
     technicalGuidance:
@@ -218,6 +222,7 @@ const chatCopy = {
     frictionQuestion: string;
     unclearGuidance: string;
     casualReply: string;
+    greetingReply: string;
     unclearContactOffer: string;
     technicalGuidance: string;
     contactQuestion: string;
@@ -319,7 +324,7 @@ const categoryKeywords: Record<DiscoveryCategory, string[]> = {
 };
 
 function normalizeText(value: string) {
-  return value.trim().toLocaleLowerCase("tr-TR");
+  return value.trim().toLocaleLowerCase("tr-TR").replaceAll("aı", "ai");
 }
 
 function containsAny(text: string, keywords: string[]) {
@@ -355,8 +360,11 @@ function needsTechnicalGuidance(command: string) {
   const text = normalizeText(command);
   return containsAny(text, [
     "ai bilmiyorum",
+    "ai kullanmak istiyorum",
     "yapay zeka bilmiyorum",
+    "yapay zeka kullanmak istiyorum",
     "yapay zekâ bilmiyorum",
+    "yapay zekâ kullanmak istiyorum",
     "teknik bilmiyorum",
     "nereden başlayacağımı bilmiyorum",
     "nasıl başlayacağımı bilmiyorum",
@@ -378,6 +386,20 @@ function isCasualOrNoIntent(command: string) {
     "just browsing",
     "just looking",
   ]);
+}
+
+function isSimpleGreeting(command: string) {
+  const text = normalizeText(command).replace(/[.!?]/g, "");
+
+  return [
+    "merhaba",
+    "selam",
+    "selamlar",
+    "iyi günler",
+    "iyi akşamlar",
+    "hello",
+    "hi",
+  ].includes(text);
 }
 
 function classifyNeed(business: string, friction: string) {
@@ -766,6 +788,13 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     }
 
     if (step === "business") {
+      if (isSimpleGreeting(trimmedCommand)) {
+        setStep("business");
+        nextMessages.push(createMessage("agent", copy.greetingReply, "gold"));
+        appendMessages(nextMessages);
+        return;
+      }
+
       if (isCasualOrNoIntent(trimmedCommand)) {
         setBusinessSummary("Henüz netleşmemiş ziyaretçi");
         setStep("business");

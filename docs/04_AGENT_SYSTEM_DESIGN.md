@@ -7,11 +7,13 @@
 It currently:
 
 - Opens with a clear Turkish-first discovery greeting.
+- Handles simple greetings with a short business/project/need prompt instead of jumping into category discovery.
 - Understands the visitor's need without turning the chat into a long consulting session.
 - Responds lightly to casual/no-intent visitors and asks what they do instead of pushing the form.
 - Briefly explains how Leonardo Tales can help the visitor's business type when enough context exists.
 - Classifies the need into one of four paths with deterministic keyword and intent scoring.
 - Recognizes clear first-message intents such as web sitesi + AI asistan as `AI Müşteri Temsilcisi + Website`.
+- Normalizes Turkish-locale `AI` casing so uppercase `AI` does not become a missed `aı` intent.
 - Asks at most one clarifying question when the need is unclear.
 - Confirms the understood need in simple Turkish.
 - Offers to open an in-chat contact form after the confirmation.
@@ -146,3 +148,15 @@ Henüz Netleşmedi:
 - Do not claim a system is connected until it is.
 - Do not ask for sensitive secrets.
 - Do not present the assistant as a general-purpose medical, legal, or financial advisor.
+
+## Local Conversation Evals
+
+Sprint 1.4 adds a lightweight deterministic eval script:
+
+```bash
+npm run eval:agent
+```
+
+The eval runs locally without OpenAI, Supabase, backend routes, Telegram, WhatsApp, or test-framework dependencies. It checks 10 key scenarios: greeting, casual/no-intent, website + AI customer representative, beauty center, sales/proposal, operations/workflow, pricing guardrail, direct human contact, unclear AI interest, and valid form submission.
+
+Quality rules include Turkish-first concise replies, no price numbers, no fake integration claims, no internal category codes in user-facing responses, no early form opening for greeting/casual messages, form offer for clear business intent, and form opening for direct human contact intent.

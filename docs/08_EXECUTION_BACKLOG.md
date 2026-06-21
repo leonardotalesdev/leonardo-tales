@@ -88,6 +88,39 @@ Result:
 - Preserved local-only form storage and existing terminal visual language.
 - Confirmed no external integration was added.
 
+## Sprint 1.3 - Premium Chat UI Polish
+
+Status: completed.
+
+Goal: improve the chat panel's premium feel without redesigning the site or adding integrations.
+
+Result:
+
+- Replaced bright scrollbar behavior with dark integrated scrollbars.
+- Made the left protocol/status panel feel more active with restrained green glow and status depth.
+- Added deterministic response pacing with a short local "Yanıt hazırlanıyor..." state.
+- Preserved the terminal-like Leonardo Tales AI OS visual language.
+
+## Sprint 1.4 - Agent Conversation Eval Sprint
+
+Status: completed.
+
+Goal: create a lightweight deterministic conversation evaluation system for the local customer representative agent.
+
+Tasks:
+
+- Add local eval scenarios for greeting, casual/no-intent, clear web + AI assistant need, beauty center, sales/proposal, operations, pricing, human contact, unclear AI interest, and form submission.
+- Add quality rules for Turkish-first concise replies, no price quotes, no fake integration claims, no internal category codes, and correct form timing.
+- Improve greeting behavior so "Merhaba" asks for business/project/need instead of jumping to category discovery.
+- Normalize Turkish-locale `AI` casing so uppercase `AI` is recognized as `ai`.
+
+Result:
+
+- Added `src/lib/agent/evals.ts`.
+- Added `npm run eval:agent`.
+- Kept all behavior deterministic and local.
+- No external service, backend route, or heavy test framework was added.
+
 ## Sprint 2 - Lead Capture Backend
 
 Goal: store classified leads safely.

@@ -178,6 +178,16 @@ Alternatif daha kısa açılış:
 
 ### Aşama 1 — İlk Temas
 
+Kullanıcı yalnızca selam verirse form açılmaz ve kategori sorusuna hemen geçilmez.
+
+Örnek:
+
+Kullanıcı:
+“Merhaba”
+
+Ajan:
+“Merhaba. İşinizi, projenizi veya kurmak istediğiniz yapay zekâ sistemini kısaca yazın; sizi doğru başlangıç noktasına yönlendireyim.”
+
 Kullanıcı ciddi bir ihtiyaç yazarsa:
 
 1. İhtiyacı anla
@@ -642,3 +652,40 @@ Leonardo Tales müşteri temsilcisi ajanı, kullanıcının tüm problemini çö
 Ajanın nihai görevi:
 
 **Kullanıcıyı anlamak, doğru hizmet hattına yaklaştırmak, fırsatı sade şekilde göstermek ve insan takip sürecine temiz veriyle taşımaktır.**
+
+---
+
+## 18. Deterministic Eval Senaryoları
+
+Sprint 1.4 itibarıyla ajan davranışı şu yerel eval komutuyla kontrol edilir:
+
+```bash
+npm run eval:agent
+```
+
+Eval sistemi dış servis, LLM veya backend kullanmaz. Amaç, deterministik müşteri temsilcisi akışının kritik davranışlarını kırmadan ilerlemektir.
+
+Kapsanan senaryolar:
+
+* Basit selam: “Merhaba”
+* Alakasız/rahat mesaj: “Canım sıkıldı, öylesine yazdım.”
+* Emlak ofisi + web sitesi + yapay zekâ müşteri temsilcisi
+* Güzellik merkezi
+* Satış/teklif ihtiyacı
+* Operasyon/iş akışı ihtiyacı
+* Fiyat sorusu
+* İnsanla görüşme talebi
+* Belirsiz AI ilgisi: “AI kullanmak istiyorum ama ne yapacağımı bilmiyorum.”
+* Geçerli form gönderimi sonrası kapanış
+
+Kalite kuralları:
+
+* Cevap Türkçe ve kısa olmalıdır.
+* Fiyat numarası verilmemelidir.
+* Gerçek olmayan Supabase, Telegram, WhatsApp, CRM veya veritabanı iddiası kurulmamalıdır.
+* İç kategori kodları kullanıcıya gösterilmemelidir.
+* Selam veya alakasız mesajlarda form erken açılmamalıdır.
+* Net iş ihtiyacında gereksiz ek keşif sorusu sorulmamalıdır.
+* İnsanla görüşme talebi form açılışına yönlendirmelidir.
+
+Not: Türkçe locale içinde büyük `AI` ifadesi `aı` gibi normalize olabildiği için deterministik metin işleme katmanı bu özel durumu `ai` olarak düzeltir.

@@ -164,3 +164,36 @@ Checks:
 Next safest sprint:
 
 Commit Sprint 1 + Sprint 1.1 + Sprint 1.2 together, then add a small server-side lead submission boundary before Supabase and Telegram integration.
+
+## 2026-06-21 - Sprint 1.4 Agent Conversation Eval Sprint
+
+Scope:
+
+- Add deterministic local conversation evals for the Leonardo Tales customer representative agent.
+- Cover greeting, casual/no-intent, clear website + AI customer representative, beauty center, sales/proposal, operations/workflow, pricing, human contact, unclear AI interest, and valid form submission scenarios.
+- Keep the assistant short, Turkish-first, business-aware, and local-only.
+- Do not add LLM, Supabase, Telegram, WhatsApp, backend routes, or a heavy test framework.
+
+Implemented:
+
+- Added `src/lib/agent/evals.ts` as a lightweight local eval runner.
+- Added `npm run eval:agent`.
+- Added deterministic quality rules: concise Turkish response, no price numbers, no fake integration claims, no internal category codes, no early form opening for greeting/casual messages, form offer for clear intent, and immediate form handoff for human-contact intent.
+- Improved simple greeting handling so "Merhaba" asks for business/project/need instead of jumping directly to category discovery.
+- Fixed Turkish locale normalization for uppercase `AI`, which could become `aı` and miss AI-interest intent checks.
+- Updated the customer representative agent protocol and agent system docs.
+
+Weak behaviors found:
+
+- Simple greeting was too quickly routed toward category discovery.
+- Uppercase `AI` inside Turkish locale normalization could miss the technical-guidance branch.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Next safest sprint:
+
+Add a small server-side lead submission boundary with validation before connecting Supabase or Telegram.
