@@ -1066,6 +1066,16 @@ h3 {
   line-height: 1.5;
 }
 
+.core-chat-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .core-chat-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

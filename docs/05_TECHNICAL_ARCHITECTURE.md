@@ -41,6 +41,7 @@ src/lib/
   leads/validation.ts
   leads/supabase.ts
   notifications/telegram.ts
+  rate-limit/in-memory.ts
 
 supabase/
   migrations/001_create_leads.sql
@@ -96,6 +97,7 @@ Verified in repo:
 - Supabase migration file for the `public.leads` table.
 - Supabase live lead insert verified locally through `POST /api/leads`.
 - Telegram live notification verified locally through `POST /api/leads`.
+- Basic lead anti-spam checks: honeypot field, form dwell time, field length limits, and best-effort in-memory IP rate limiting.
 
 Not verified or not implemented:
 
@@ -131,14 +133,27 @@ Server behavior:
 
 - Parses JSON and validates required fields.
 - Requires name, valid email, and company/project.
-- Trims and normalizes optional lead fields.
+- Trims and normalizes lead fields.
+- Enforces server-side field length limits before persistence.
+- Rejects a filled `website_url` honeypot field.
+- Requires a client-created `form_started_at` timestamp and rejects unrealistically fast submissions under 2 seconds.
+- Applies a best-effort in-memory IP rate limit before persistence: 5 lead submissions per IP per 10 minutes.
 - Returns `400` for invalid input.
+- Returns `400` for spam/honeypot or too-fast submissions with a safe Turkish message.
+- Returns `429` for rate-limited submissions with a safe Turkish message and `Retry-After`.
 - Uses `LEADS_STORAGE_MODE=local` for local-only testing.
 - Uses Supabase REST insert when storage mode is Supabase and `SUPABASE_URL` plus `SUPABASE_SERVICE_ROLE_KEY` are present.
 - Returns setup-aware `500` responses when storage is unavailable instead of faking success.
 - Attempts Telegram notification after storage succeeds, but lead storage does not depend on Telegram success.
+- Reports Telegram request failures as `notification: "failed"` without losing a stored lead.
 - With `LEADS_NOTIFICATION_MODE=telegram`, live Telegram delivery has been verified as `notification: "sent"`.
 - Does not log private lead details.
+
+Rate-limit note:
+
+- `src/lib/rate-limit/in-memory.ts` is process-local and best-effort only.
+- It is useful for local/basic protection, but it is not strong production abuse protection in serverless or multi-instance deployments.
+- A shared external limiter should be added later if public traffic or abuse volume increases.
 
 The browser must not import or reference private Supabase or Telegram secrets.
 
@@ -190,6 +205,8 @@ npm run start
 Before production:
 
 - Run lint and build.
+- Run `npm run eval:agent` and `npm run eval:leads`.
+- Complete `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`.
 - Verify `NEXT_PUBLIC_SITE_URL`.
 - Add OG image if social sharing matters.
 - Add global not-found/error states if needed.

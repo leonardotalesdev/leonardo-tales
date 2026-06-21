@@ -45,6 +45,16 @@ Do not:
 - Put API keys in client components.
 - Initialize private service clients at module scope in files that may be evaluated during build.
 - Prefix private Supabase, Telegram, OpenAI, or Resend secrets with `NEXT_PUBLIC_`.
+- Print full lead payloads, contact details, or anti-spam internals in logs.
+
+## Anti-spam Boundary
+
+Do not:
+
+- Remove the hidden `website_url` honeypot without replacing it with another verified anti-spam control.
+- Remove the `form_started_at` dwell-time check before public traffic.
+- Treat the in-memory rate limiter as strong production protection.
+- Add CAPTCHA, external bot services, or platform-scale infrastructure unless abuse patterns justify it.
 
 ## Assistant Behavior
 

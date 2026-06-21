@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "eval:agent": "node --experimental-strip-types src/lib/agent/evals.ts"
+    "eval:agent": "node --experimental-strip-types src/lib/agent/evals.ts",
+    "eval:leads": "node --experimental-strip-types src/lib/leads/evals.mjs"
   },
   "dependencies": {
     "next": "16.2.9",

@@ -14,6 +14,8 @@ export type LeadSubmissionInput = {
   phone?: string;
   company_or_project: string;
   website?: string;
+  website_url?: string;
+  form_started_at?: number | string;
   preferred_contact_channel?: ContactPreference;
   note?: string;
   business_type?: string;
@@ -73,6 +75,8 @@ export type LeadSubmissionResult =
       message: string;
       code:
         | "invalid_input"
+        | "spam_rejected"
+        | "rate_limited"
         | "storage_not_configured"
         | "storage_failed"
         | "unexpected_error";

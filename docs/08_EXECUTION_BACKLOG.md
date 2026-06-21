@@ -151,7 +151,36 @@ Result:
 - Live Supabase insert was verified after applying the migration and service-role grants.
 - Telegram live notification was verified after configuring server-only bot env vars.
 
+## Sprint 2.3 - Spam / Rate Limit / Production Smoke Checklist
+
+Status: completed.
+
+Goal: add basic protection to the public lead submission path before sending traffic to the form.
+
+Tasks:
+
+- Add hidden honeypot field to the client payload.
+- Add client-created form start timestamp.
+- Reject honeypot-filled and unrealistically fast submissions server-side.
+- Normalize, trim, and cap lead field lengths server-side.
+- Add a best-effort IP rate limiter without external infrastructure.
+- Keep Supabase persistence as the source of truth.
+- Keep Telegram notification non-blocking after successful storage.
+- Add deterministic lead anti-spam evals.
+- Add a production smoke-test checklist.
+
+Result:
+
+- Added `website_url` honeypot and `form_started_at` anti-spam fields.
+- Added server-side spam classification before Supabase persistence.
+- Added process-local limiter: 5 lead submissions per IP per 10 minutes.
+- Added `npm run eval:leads`.
+- Added `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`.
+- Documented that the in-memory limiter is not reliable as strong serverless/multi-instance production protection.
+
 ## Sprint 3 - Lead Notifications
+
+Status: completed for Telegram.
 
 Goal: notify team after lead capture.
 
@@ -164,6 +193,8 @@ Tasks:
 
 ## Sprint 4 - Production Readiness
 
+Status: next.
+
 Goal: prepare the MVP for public traffic.
 
 Tasks:
@@ -171,7 +202,7 @@ Tasks:
 - Run full build.
 - Add 404/error states if missing.
 - Review metadata and OG assets.
-- Add rate limiting or spam protection if public form is live.
+- Complete production smoke checklist on Vercel.
 - Verify deployment environment.
 - Smoke test all routes.
 

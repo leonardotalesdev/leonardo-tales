@@ -4,6 +4,10 @@ import { storeLead } from "@/lib/leads/supabase";
 import type { LeadSubmissionResult } from "@/lib/leads/types";
 import { validateLeadSubmission } from "@/lib/leads/validation";
 import { notifyLeadTelegram } from "@/lib/notifications/telegram";
+import {
+  checkInMemoryRateLimit,
+  getClientIp,
+} from "@/lib/rate-limit/in-memory";
 
 export async function POST(request: Request) {
   let payload: unknown;
@@ -20,9 +24,41 @@ export async function POST(request: Request) {
     return NextResponse.json(result, { status: 400 });
   }
 
+  const rateLimit = checkInMemoryRateLimit(getClientIp(request));
+
+  if (!rateLimit.ok) {
+    const result: LeadSubmissionResult = {
+      ok: false,
+      code: "rate_limited",
+      message:
+        "Çok kısa sürede fazla gönderim yapıldı. Lütfen birkaç dakika sonra tekrar deneyin.",
+      persistence: "failed",
+      notification: "skipped",
+    };
+
+    return NextResponse.json(result, {
+      status: 429,
+      headers: {
+        "Retry-After": String(rateLimit.retryAfterSeconds),
+      },
+    });
+  }
+
   const validation = validateLeadSubmission(payload);
 
   if (!validation.ok) {
+    if (validation.kind === "spam") {
+      const result: LeadSubmissionResult = {
+        ok: false,
+        code: "spam_rejected",
+        message: "Form gönderimi doğrulanamadı. Lütfen tekrar deneyin.",
+        persistence: "failed",
+        notification: "skipped",
+      };
+
+      return NextResponse.json(result, { status: 400 });
+    }
+
     const result: LeadSubmissionResult = {
       ok: false,
       code: "invalid_input",

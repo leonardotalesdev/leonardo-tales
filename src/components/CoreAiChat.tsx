@@ -724,9 +724,12 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   const [leadDraft, setLeadDraft] = useState<LeadDraft>(emptyLeadDraft);
   const [submittedLead, setSubmittedLead] = useState<SubmittedLead | null>(null);
   const [formError, setFormError] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const previousStepRef = useRef<DiscoveryStep>(step);
   const responseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messageIdRef = useRef(
     Math.max(...copy.messages.map((message) => message.id)) + 1,
@@ -742,6 +745,15 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
 
     return () => cancelAnimationFrame(animationFrame);
   }, [messages, step, formError, isProcessing, isSubmittingLead]);
+
+  useEffect(() => {
+    if (step === "contact_form" && previousStepRef.current !== "contact_form") {
+      setFormStartedAt(Date.now());
+      setWebsiteUrl("");
+    }
+
+    previousStepRef.current = step;
+  }, [step]);
 
   useEffect(() => {
     return () => {
@@ -995,6 +1007,8 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
           status: nextLead.status,
           conversation_summary: nextLead.conversation_summary,
           next_action: nextLead.next_action,
+          website_url: websiteUrl,
+          form_started_at: formStartedAt,
         }),
       });
       const result = (await response.json()) as LeadSubmissionResult;
@@ -1010,6 +1024,8 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       setSubmittedLead(nextLead);
       setStep("completed");
       setLeadDraft(emptyLeadDraft);
+      setWebsiteUrl("");
+      setFormStartedAt(Date.now());
       appendMessages([createMessage("agent", result.message || copy.success, "neon")]);
     } catch {
       setFormError(
@@ -1102,6 +1118,19 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                 <span>{categoryLabels[category]}</span>
               </div>
               <p>{copy.formDescription}</p>
+
+              <label aria-hidden="true" className="core-chat-honeypot">
+                <span>Website URL</span>
+                <input
+                  autoComplete="off"
+                  disabled={isSubmittingLead}
+                  name="website_url"
+                  onChange={(event) => setWebsiteUrl(event.target.value)}
+                  tabIndex={-1}
+                  type="text"
+                  value={websiteUrl}
+                />
+              </label>
 
               <div className="core-chat-form-grid">
                 <label>

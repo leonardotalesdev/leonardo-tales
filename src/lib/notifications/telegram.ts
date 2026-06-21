@@ -74,20 +74,30 @@ export async function notifyLeadTelegram(
     };
   }
 
-  const response = await fetch(
-    `https://api.telegram.org/bot${config.botToken}/sendMessage`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  let response: Response;
+
+  try {
+    response = await fetch(
+      `https://api.telegram.org/bot${config.botToken}/sendMessage`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: config.chatId,
+          text: formatLeadNotification(lead),
+          disable_web_page_preview: true,
+        }),
       },
-      body: JSON.stringify({
-        chat_id: config.chatId,
-        text: formatLeadNotification(lead),
-        disable_web_page_preview: true,
-      }),
-    },
-  );
+    );
+  } catch {
+    return {
+      ok: false,
+      notification: "failed",
+      message: "Telegram notification request failed.",
+    };
+  }
 
   if (!response.ok) {
     return {

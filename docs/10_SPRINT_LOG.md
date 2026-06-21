@@ -315,3 +315,42 @@ Current integration status:
 Next safest sprint:
 
 Add basic spam/rate-limit protection and a production smoke-test checklist before sending public traffic to the form.
+
+## 2026-06-21 - Sprint 2.3 Spam / Rate Limit / Production Smoke Checklist
+
+Scope:
+
+- Add minimal anti-spam protection to `POST /api/leads`.
+- Keep the deterministic assistant and premium chat UI unchanged.
+- Keep Supabase persistence and Telegram notification behavior intact.
+- Do not add OpenAI/LLM or external rate-limit infrastructure.
+- Add a production smoke checklist for the first public traffic pass.
+
+Implemented:
+
+- Added `website_url` honeypot and `form_started_at` fields to the chat form payload.
+- Kept those anti-spam fields hidden/offscreen and out of the visible UI.
+- Added server-side normalization and trimming for lead strings.
+- Added server-side max length checks for name, email, phone, company/project, website, note, business type, detected need, and conversation summary.
+- Rejected filled honeypot submissions before persistence.
+- Rejected form submissions under 2 seconds before persistence.
+- Added a process-local IP limiter at 5 lead submissions per IP per 10 minutes.
+- Added safe Turkish `400` responses for invalid/spam submissions and `429` responses for rate-limited submissions.
+- Hardened Telegram notification request failures so stored leads still return success with `notification: "failed"`.
+- Added `npm run eval:leads` for deterministic validation/rate-limit checks.
+- Added `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`.
+
+Known limitation:
+
+- The in-memory rate limiter is best-effort only. It can reset on server restart and does not coordinate across serverless regions or multiple instances.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run eval:leads` passed 6/6 scenarios.
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Next safest sprint:
+
+Perform the production smoke checklist on the Vercel deployment URL before routing public traffic to `leonardotales.com`.
