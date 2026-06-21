@@ -92,14 +92,14 @@ Verified in repo:
 - In-chat contact form with client-side validation and server-side API submission boundary.
 - Server-side lead payload validation.
 - Supabase REST insert helper prepared for server-side `service_role` usage.
-- Telegram notification helper prepared for server-side bot notifications.
+- Telegram notification helper with live delivery verified.
 - Supabase migration file for the `public.leads` table.
 - Supabase live lead insert verified locally through `POST /api/leads`.
+- Telegram live notification verified locally through `POST /api/leads`.
 
 Not verified or not implemented:
 
 - OpenAI or other LLM provider.
-- Telegram runtime notification against the live bot/chat.
 - WhatsApp.
 - Resend.
 - Vercel project linking.
@@ -137,6 +137,7 @@ Server behavior:
 - Uses Supabase REST insert when storage mode is Supabase and `SUPABASE_URL` plus `SUPABASE_SERVICE_ROLE_KEY` are present.
 - Returns setup-aware `500` responses when storage is unavailable instead of faking success.
 - Attempts Telegram notification after storage succeeds, but lead storage does not depend on Telegram success.
+- With `LEADS_NOTIFICATION_MODE=telegram`, live Telegram delivery has been verified as `notification: "sent"`.
 - Does not log private lead details.
 
 The browser must not import or reference private Supabase or Telegram secrets.

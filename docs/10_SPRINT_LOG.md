@@ -226,9 +226,9 @@ Runtime behavior:
 - Telegram notification runs only server-side and reports `not_configured` when env vars are missing.
 - Telegram success is not required for lead storage success.
 
-Still not verified:
+Verified later:
 
-- Live Telegram bot/chat delivery.
+- Live Telegram bot/chat delivery was verified in Sprint 2.2.
 
 Checks:
 
@@ -238,7 +238,7 @@ Checks:
 
 Next safest sprint:
 
-Configure Telegram env vars and run one notification smoke test after Supabase storage remains stable.
+Run a complete UI-to-Supabase-to-Telegram smoke test before public launch and then add anti-spam controls.
 
 ## 2026-06-21 - Sprint 2.1 Supabase + Telegram Live Verification
 
@@ -288,3 +288,30 @@ Next action:
 - Keep Supabase env vars in `.env.local` only.
 - Delete or mark Sprint 2.1 test leads in Supabase if they should not remain in production data.
 - Configure Telegram only when ready, then verify `notification: "sent"` with a separate smoke test.
+
+## 2026-06-21 - Sprint 2.2 Telegram Lead Notification Verification
+
+Scope:
+
+- Verify Telegram lead notification after successful Supabase persistence.
+- Keep Supabase storage as the source of truth.
+- Do not expose Telegram or Supabase secrets.
+- Do not test or add OpenAI/LLM.
+
+Verified:
+
+- Supabase persistence remained `persistence: "stored"`.
+- Telegram notification returned `notification: "sent"`.
+- Telegram message was received.
+- Telegram notification did not block Supabase persistence.
+- No secret values were printed or committed.
+
+Current integration status:
+
+- Supabase lead persistence: verified.
+- Telegram lead notification: verified.
+- WhatsApp, Resend, OpenAI/LLM: not configured.
+
+Next safest sprint:
+
+Add basic spam/rate-limit protection and a production smoke-test checklist before sending public traffic to the form.

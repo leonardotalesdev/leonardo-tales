@@ -149,7 +149,7 @@ Result:
 - Kept form open when API submission fails.
 - No OpenAI, WhatsApp, Resend, dashboard, or admin panel was added.
 - Live Supabase insert was verified after applying the migration and service-role grants.
-- Telegram notification still requires real env vars and live bot/chat verification.
+- Telegram live notification was verified after configuring server-only bot env vars.
 
 ## Sprint 3 - Lead Notifications
 
