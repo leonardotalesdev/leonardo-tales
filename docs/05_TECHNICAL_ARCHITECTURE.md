@@ -94,11 +94,11 @@ Verified in repo:
 - Supabase REST insert helper prepared for server-side `service_role` usage.
 - Telegram notification helper prepared for server-side bot notifications.
 - Supabase migration file for the `public.leads` table.
+- Supabase live lead insert verified locally through `POST /api/leads`.
 
 Not verified or not implemented:
 
 - OpenAI or other LLM provider.
-- Supabase runtime persistence against the live project.
 - Telegram runtime notification against the live bot/chat.
 - WhatsApp.
 - Resend.
@@ -146,6 +146,36 @@ Supabase note:
 - The prepared helper uses the Supabase Data API (`/rest/v1/leads`).
 - New Supabase tables may need to be explicitly exposed to the Data API in project settings before REST inserts work.
 - RLS is enabled in the migration, and the app is designed to write through the server-side service role key only.
+- Live verification initially returned PostgREST `42501` permission denied for `public.leads`.
+- The verified fix is included in the migration: grant schema usage and table CRUD privileges to `service_role`.
+
+## Sprint 2.1 Live Verification Checklist
+
+Supabase setup:
+
+1. In Supabase Dashboard, open the Leonardo Tales project.
+2. Find the project URL in `Integrations > Data API`.
+3. Find server-side API keys in `Settings > API Keys`.
+4. Add only to `.env.local`:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `LEADS_STORAGE_MODE=supabase`
+   - `LEADS_NOTIFICATION_MODE=none` until Telegram is configured
+5. Apply `supabase/migrations/001_create_leads.sql` in `SQL Editor > New Query > Run`.
+6. If REST insert fails with table exposure errors, open `Integrations > Data API` and expose the `leads` table or enable default privileges for new public entities as appropriate.
+
+Telegram setup:
+
+1. In Telegram, open BotFather and create a bot.
+2. Add only to `.env.local`:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
+   - `LEADS_NOTIFICATION_MODE=telegram`
+3. Restart the local Next.js dev server after env changes.
+4. Submit a test lead from the UI.
+5. Verify the API reports `persistence: "stored"` and `notification: "sent"`.
+
+Never paste secret values into chat, logs, docs, screenshots, or committed files.
 
 ## Deployment Readiness
 

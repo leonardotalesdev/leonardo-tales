@@ -48,6 +48,12 @@ create table if not exists public.leads (
 
 alter table public.leads enable row level security;
 
+grant usage on schema public to service_role;
+
+grant select, insert, update, delete
+  on table public.leads
+  to service_role;
+
 create policy "Service role can manage leads"
   on public.leads
   for all

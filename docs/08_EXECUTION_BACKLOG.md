@@ -148,7 +148,8 @@ Result:
 - Updated `CoreAiChat` to submit form data through the API route.
 - Kept form open when API submission fails.
 - No OpenAI, WhatsApp, Resend, dashboard, or admin panel was added.
-- Live Supabase insert and Telegram notification still require real env vars and applied migration verification.
+- Live Supabase insert was verified after applying the migration and service-role grants.
+- Telegram notification still requires real env vars and live bot/chat verification.
 
 ## Sprint 3 - Lead Notifications
 

@@ -65,31 +65,41 @@ export async function storeLead(
     };
   }
 
-  const response = await fetch(`${config.url}/rest/v1/leads`, {
-    method: "POST",
-    headers: {
-      apikey: config.serviceRoleKey,
-      Authorization: `Bearer ${config.serviceRoleKey}`,
-      "Content-Type": "application/json",
-      Prefer: "return=representation",
-    },
-    body: JSON.stringify({
-      name: lead.name,
-      email: lead.email,
-      phone: lead.phone ?? null,
-      company_or_project: lead.company_or_project,
-      website: lead.website ?? null,
-      preferred_contact_channel: lead.preferred_contact_channel,
-      note: lead.note ?? null,
-      business_type: lead.business_type ?? null,
-      detected_need: lead.detected_need ?? null,
-      category: lead.category,
-      source: lead.source,
-      status: lead.status,
-      conversation_summary: lead.conversation_summary ?? null,
-      next_action: lead.next_action,
-    }),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${config.url}/rest/v1/leads`, {
+      method: "POST",
+      headers: {
+        apikey: config.serviceRoleKey,
+        Authorization: `Bearer ${config.serviceRoleKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone ?? null,
+        company_or_project: lead.company_or_project,
+        website: lead.website ?? null,
+        preferred_contact_channel: lead.preferred_contact_channel,
+        note: lead.note ?? null,
+        business_type: lead.business_type ?? null,
+        detected_need: lead.detected_need ?? null,
+        category: lead.category,
+        source: lead.source,
+        status: lead.status,
+        conversation_summary: lead.conversation_summary ?? null,
+        next_action: lead.next_action,
+      }),
+    });
+  } catch {
+    return {
+      ok: false,
+      persistence: "failed",
+      message: "Supabase REST request failed before receiving a response.",
+    };
+  }
 
   if (!response.ok) {
     return {
@@ -99,11 +109,21 @@ export async function storeLead(
     };
   }
 
-  const rows = (await response.json()) as Array<{ id?: string }>;
+  const responseText = await response.text();
+  let leadId: string | undefined;
+
+  if (responseText) {
+    try {
+      const rows = JSON.parse(responseText) as Array<{ id?: string }>;
+      leadId = Array.isArray(rows) ? rows[0]?.id : undefined;
+    } catch {
+      leadId = undefined;
+    }
+  }
 
   return {
     ok: true,
     persistence: "stored",
-    leadId: rows[0]?.id,
+    leadId,
   };
 }

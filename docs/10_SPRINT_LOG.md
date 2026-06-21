@@ -228,9 +228,6 @@ Runtime behavior:
 
 Still not verified:
 
-- Live Supabase insert against the created project.
-- Applied migration in the remote Supabase database.
-- Supabase Data API exposure for the `leads` table.
 - Live Telegram bot/chat delivery.
 
 Checks:
@@ -241,4 +238,53 @@ Checks:
 
 Next safest sprint:
 
-Apply the Supabase migration to the real project, set production env vars, and run one end-to-end lead submission smoke test before enabling Telegram notifications.
+Configure Telegram env vars and run one notification smoke test after Supabase storage remains stable.
+
+## 2026-06-21 - Sprint 2.1 Supabase + Telegram Live Verification
+
+Scope:
+
+- Verify the real Supabase persistence and Telegram notification path locally.
+- Keep the verification secret-safe.
+- Do not add product features or UI redesigns.
+
+Inspection:
+
+- `POST /api/leads` exists and returns setup-aware JSON.
+- `.env.local` remains ignored.
+- `.env.example` is allowed through `.gitignore`.
+- Supabase migration exists at `supabase/migrations/001_create_leads.sql`.
+
+Current environment status:
+
+- `SUPABASE_URL`: set.
+- `SUPABASE_SERVICE_ROLE_KEY`: set.
+- `TELEGRAM_BOT_TOKEN`: missing.
+- `TELEGRAM_CHAT_ID`: missing.
+- `LEADS_STORAGE_MODE`: set.
+- `LEADS_NOTIFICATION_MODE`: set.
+
+Verification result:
+
+- Supabase migration was applied manually in Supabase SQL Editor.
+- `public.leads` is visible in Supabase Table Editor.
+- Live Supabase insert was tested through `POST /api/leads`.
+- Initial Supabase REST insert returned HTTP 403 / PostgREST `42501` permission denied for `public.leads`.
+- Manual SQL grants were applied in Supabase SQL Editor:
+  - `grant usage on schema public to service_role;`
+  - `grant select, insert, update, delete on table public.leads to service_role;`
+- After the service-role grants, direct Supabase REST insert returned HTTP 201.
+- `POST /api/leads` returned `ok: true`.
+- API response included `persistence: "stored"`.
+- API response included `notification: "skipped"`, which is correct because Telegram is not configured yet.
+- A test lead was created in `public.leads`.
+- Live Telegram notification was not run.
+- Local-only API path was smoke tested and returned `persistence: "local_only"` plus `notification: "skipped"`.
+- No secret values were printed.
+- Supabase helper was hardened so REST request exceptions return controlled storage failures instead of falling into the API route's generic unexpected-error branch.
+
+Next action:
+
+- Keep Supabase env vars in `.env.local` only.
+- Delete or mark Sprint 2.1 test leads in Supabase if they should not remain in production data.
+- Configure Telegram only when ready, then verify `notification: "sent"` with a separate smoke test.
