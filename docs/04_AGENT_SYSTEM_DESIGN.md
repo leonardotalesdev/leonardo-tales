@@ -19,15 +19,17 @@ It currently:
 - Offers to open an in-chat contact form after the confirmation.
 - Answers pricing questions without quoting a price.
 - Validates required contact fields on the client.
-- Stores submitted lead data in local React component state.
-- Hides the form after successful local submission.
+- Submits lead data to `POST /api/leads`.
+- Keeps the form open if the server submission fails.
+- Hides the form after successful submission.
 
 It does not:
 
 - Does not call an LLM.
-- Does not call a backend.
-- Does not insert data into Supabase.
-- Does not send Telegram, WhatsApp, or email notifications.
+- Does not quote prices.
+- Does not send WhatsApp or email notifications.
+- Does not create CRM records.
+- Does not automate follow-up beyond lead storage and Telegram notification.
 
 ## Intended Assistant Behavior
 
@@ -136,11 +138,14 @@ Henüz Netleşmedi:
 ## Future Architecture Sketch
 
 - Existing client chat UI.
-- Server route or Server Action for lead submission.
+- `POST /api/leads` route for lead submission.
 - Shared lead payload validator.
 - Supabase insert.
 - Telegram notification.
 - Manual follow-up.
+- Future Tool Permission Layer before connecting agents to sensitive systems.
+- Future Human Approval Layer for pricing, proposal, CRM, code, payment, or legal actions.
+- Future Audit & Telemetry Layer before scaling autonomous workflows.
 
 ## Guardrails
 
@@ -148,6 +153,19 @@ Henüz Netleşmedi:
 - Do not claim a system is connected until it is.
 - Do not ask for sensitive secrets.
 - Do not present the assistant as a general-purpose medical, legal, or financial advisor.
+- Do not give agents hidden authority over irreversible business actions.
+- Keep agent capability bounded by explicit workflow, permission, and human handoff rules.
+
+## Agent Control Alignment
+
+Sprint 3.0 adds `docs/13_AGENT_CONTROL_PRINCIPLES.md` as the long-term reference for designing, limiting, monitoring, and controlling Leonardo Tales agents.
+
+Core alignment:
+
+- Agents are bounded operational components, not fully trusted autonomous actors.
+- The MVP uses deterministic behavior instead of uncontrolled LLM autonomy.
+- Lead capture has validation, persistence, notification, spam checks, and human follow-up.
+- Future sales, proposal, CRM, operations, code, payment, or legal actions require approval gates and auditability.
 
 ## Local Conversation Evals
 

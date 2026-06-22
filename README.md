@@ -27,7 +27,7 @@ MVP goal: a visitor enters the site, is greeted by the AI discovery assistant, e
 3. AI Operasyon Otomasyonu
 4. Henüz Netleşmedi
 
-The system should later collect contact information and store it as a lead.
+The system collects contact information through the chat panel and submits it through the server-side lead API.
 
 ## Current Routes
 
@@ -55,20 +55,28 @@ Working:
 - Manifesto pages.
 - SEO metadata, robots, and sitemap generation.
 - Static infrastructure imagery under `public/images/infrastructure`.
-- Client-side chat prototype in `src/components/CoreAiChat.tsx`.
+- Deterministic customer representative assistant in `src/components/CoreAiChat.tsx`.
+- In-chat lead capture form submitted through `POST /api/leads`.
+- Server-side lead validation.
+- Supabase lead persistence verified locally.
+- Telegram lead notification verified locally.
+- Basic lead anti-spam controls: honeypot, dwell-time check, field limits, and best-effort in-memory rate limiting.
+- Production smoke checklist in `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`.
 
 Not implemented yet:
 
 - Real LLM assistant.
-- Lead classification logic.
-- Contact form inside the chat panel.
-- Supabase lead storage.
-- Telegram or WhatsApp notifications.
+- WhatsApp notifications.
+- Resend email notifications.
+- Admin dashboard or CRM workflow.
+- Vercel deployment/project linking.
 - Pricing flow.
 
 Do not claim these integrations are complete until they are implemented and verified.
 
 ## Local Development
+
+Local development continues for now. Vercel/deploy work is intentionally postponed until the MVP lead path is ready for a production smoke pass.
 
 ```bash
 npm install
@@ -80,13 +88,15 @@ Open `http://localhost:3000`.
 ## Checks
 
 ```bash
+npm run eval:agent
+npm run eval:leads
 npm run lint
 npm run build
 ```
 
 ## Environment
 
-The current visual prototype does not require private environment variables.
+The static website does not require private environment variables. The live lead path requires server-only variables in `.env.local` when testing Supabase persistence and Telegram notification locally.
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before deployment if the final domain differs from `https://leonardotales.com`.
 
@@ -102,3 +112,4 @@ Start with:
 - `docs/03_MVP_SCOPE.md`
 - `docs/05_TECHNICAL_ARCHITECTURE.md`
 - `docs/11_DO_NOT_TOUCH.md`
+- `docs/13_AGENT_CONTROL_PRINCIPLES.md`

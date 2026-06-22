@@ -30,6 +30,20 @@ Decision: Supabase lead storage and Telegram notifications are future implementa
 
 Reason: No verified integration exists in the current repo.
 
+Status update: Superseded by the 2026-06-21 local verification decision below.
+
+## 2026-06-21 - Supabase And Telegram Verified Locally
+
+Decision: Supabase lead persistence and Telegram lead notification may be described as verified locally for the current lead path.
+
+Reason: `POST /api/leads` was smoke tested with Supabase persistence returning stored lead behavior and Telegram notification returning sent notification behavior. Production deployment is still not claimed.
+
+## 2026-06-22 - Agent Control Layer Is Future Architecture
+
+Decision: Agent Control Layer is a long-term architecture and possible future product category, not current MVP runtime scope.
+
+Reason: Leonardo Tales should design AI agents with permission boundaries, telemetry, audit logs, human approval, rollback, kill-switches, and measurable business outcomes before adding more autonomy.
+
 ## 2026-06-20 - Text Wordmark For Now
 
 Decision: Keep the logo/wordmark text-based.

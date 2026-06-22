@@ -353,4 +353,46 @@ Checks:
 
 Next safest sprint:
 
-Perform the production smoke checklist on the Vercel deployment URL before routing public traffic to `leonardotales.com`.
+Keep local development active, review the production smoke checklist, and postpone Vercel/deploy work until a deliberate production readiness sprint resumes it.
+
+## 2026-06-22 - Sprint 3.0 Agent Control Principles & Architecture Alignment
+
+Scope:
+
+- Add a long-term architectural principles document for designing, limiting, monitoring, and controlling AI agents.
+- Align project docs with the verified local MVP state.
+- Keep this sprint documentation-only.
+- Do not add OpenAI/LLM, runtime behavior, UI redesign, Vercel/deploy changes, or `.env.local` changes.
+
+Implemented:
+
+- Added `docs/13_AGENT_CONTROL_PRINCIPLES.md`.
+- Defined the core thesis: as agents become more capable, the control layer becomes more central.
+- Framed agents as bounded operational components requiring permission boundaries, telemetry, human handoff, audit logs, sandboxing, rollback, kill-switches, and measurable business outcomes.
+- Added Agent Control Layer as a future product category, not current MVP scope.
+- Clarified product impact for AI Müşteri Temsilcisi, AI Satış ve Teklif Sistemleri, AI Operasyon Otomasyonu, Agent Operating Systems, and AGI Development.
+- Updated project brief, business model, agent system design, technical architecture, execution backlog, do-not-touch rules, and README references.
+
+MVP scope:
+
+- Unchanged.
+- Current MVP remains the deterministic discovery assistant plus lead capture path.
+- Supabase persistence and Telegram notification remain verified local lead infrastructure.
+- OpenAI/LLM, WhatsApp, Resend, CRM/admin, automated pricing, and deploy remain outside current verified scope.
+
+Delivery posture:
+
+- Local development continues.
+- Vercel/deploy is postponed.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run eval:leads` passed 6/6 scenarios.
+- `npm run lint` passed.
+- `npm run build` passed.
+- Note: `npm run eval:leads` emitted the existing Node module-type warning for `src/lib/leads/validation.ts`; the eval still passed.
+
+Next safest sprint:
+
+Run a focused production readiness pass locally: verify evals, lint, build, review the production smoke checklist, and only then decide whether to resume Vercel/deploy work.

@@ -25,16 +25,21 @@ Do not:
 
 ## Integration Claims
 
-Do not claim these are working unless implemented and verified:
+Verified locally for the current lead path:
 
 - Supabase live persistence.
 - Telegram live notifications.
+
+Do not claim these are working unless implemented and verified:
+
 - WhatsApp.
 - Vercel deployment/project linking.
 - Resend.
 - OpenAI or any other LLM provider.
+- CRM/admin workflow.
+- Agent Control Layer runtime.
 
-Sprint 2 includes a server-side lead API boundary plus Supabase and Telegram preparation code. This is not the same as a verified production integration. Only claim live persistence or notification after env vars, migration, and runtime smoke tests pass.
+Sprint 2 added a server-side lead API boundary plus Supabase and Telegram integration code. Supabase persistence and Telegram notification have been verified locally through `POST /api/leads`, but production deployment is not yet claimed.
 
 ## Secrets
 
@@ -65,6 +70,18 @@ Do not:
 - Use a playful consumer-chat voice.
 - Make medical, legal, or financial claims.
 - Collect sensitive information that is not needed for lead qualification.
+
+## Agent Control Boundaries
+
+Do not:
+
+- Build complex autonomous agents before a clear business workflow exists.
+- Connect agents to sensitive systems without permission controls.
+- Allow agents to create financial, legal, code, CRM, payment, or irreversible operational changes without approval.
+- Treat more agents as automatically better.
+- Hide uncertainty, failed actions, or unverified integrations.
+- Add production autonomy before logs, telemetry, rollback planning, and a kill-switch model exist.
+- Expand the MVP into an Agent Control Layer platform during discovery-assistant stabilization.
 
 ## Safe Change Rule
 

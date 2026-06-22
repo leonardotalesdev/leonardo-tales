@@ -13,6 +13,12 @@
 
 Development environment: Linux.
 
+Current delivery posture:
+
+- Local development continues.
+- Vercel/deploy work is postponed.
+- No production deployment is claimed in this repo state.
+
 Observed local versions during documentation sprint:
 
 - Node: `v22.22.2`.
@@ -106,6 +112,7 @@ Not verified or not implemented:
 - Resend.
 - Vercel project linking.
 - Production lead follow-up workflow.
+- Agent Control Layer product runtime.
 
 ## Environment Variables
 
@@ -193,6 +200,25 @@ Telegram setup:
 
 Never paste secret values into chat, logs, docs, screenshots, or committed files.
 
+## Agent Control Architecture Direction
+
+Sprint 3.0 adds `docs/13_AGENT_CONTROL_PRINCIPLES.md` as the reference for future agent architecture.
+
+This is a documentation and architecture alignment layer only. It does not add runtime code, OpenAI/LLM behavior, new tool calls, or deployment changes.
+
+Future agent systems should be designed as layered control systems:
+
+- Agent Runtime.
+- Tool Permission Layer.
+- Workflow Orchestration Layer.
+- Human Approval Layer.
+- Audit & Telemetry Layer.
+- Risk Scoring Layer.
+- Rollback / Kill-switch Layer.
+- Business KPI Layer.
+
+The current MVP already applies early control principles through deterministic assistant behavior, server-side validation, Supabase persistence, Telegram notification, spam checks, rate limiting, no automated pricing, and human follow-up.
+
 ## Deployment Readiness
 
 The app has the standard scripts needed for a Node-compatible Next.js deployment:
@@ -207,6 +233,7 @@ Before production:
 - Run lint and build.
 - Run `npm run eval:agent` and `npm run eval:leads`.
 - Complete `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`.
+- Keep Vercel/deploy postponed until a deliberate production smoke sprint.
 - Verify `NEXT_PUBLIC_SITE_URL`.
 - Add OG image if social sharing matters.
 - Add global not-found/error states if needed.

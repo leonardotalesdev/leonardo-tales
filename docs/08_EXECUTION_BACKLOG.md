@@ -191,9 +191,31 @@ Tasks:
 - Include lead summary, classification, and contact details.
 - Add failure handling that does not lose the lead.
 
+## Sprint 3.0 - Agent Control Principles & Architecture Alignment
+
+Status: completed as documentation and architecture alignment.
+
+Goal: define how Leonardo Tales designs, limits, monitors, and controls AI agents before adding more autonomy.
+
+Tasks:
+
+- Create `docs/13_AGENT_CONTROL_PRINCIPLES.md`.
+- Define the Agent Control Layer as a future product category, not MVP scope.
+- Separate MVP controls from future architecture, production, research, and vision layers.
+- Align project docs with the verified local lead-capture state.
+- Keep runtime code, UI, OpenAI/LLM, and deploy unchanged.
+
+Result:
+
+- Added the Agent Control Principles reference.
+- Clarified that agents should be bounded operational components with permission boundaries, telemetry, human approval, audit logs, sandboxing, rollback, kill-switches, and measurable business outcomes.
+- Kept the current MVP scope unchanged.
+- Added Agent Control Layer to future backlog language only.
+- Reconfirmed that local development continues and Vercel/deploy is postponed.
+
 ## Sprint 4 - Production Readiness
 
-Status: next.
+Status: postponed until local MVP checks and production smoke planning are deliberately resumed.
 
 Goal: prepare the MVP for public traffic.
 
@@ -202,9 +224,29 @@ Tasks:
 - Run full build.
 - Add 404/error states if missing.
 - Review metadata and OG assets.
-- Complete production smoke checklist on Vercel.
-- Verify deployment environment.
-- Smoke test all routes.
+- Complete production smoke checklist when Vercel/deploy work resumes.
+- Verify deployment environment only after deployment is deliberately resumed.
+- Smoke test all routes locally before any deploy work.
+
+## Future Backlog - Agent Control Layer
+
+Status: future / not MVP.
+
+Potential components:
+
+- Permission management.
+- Audit logs.
+- Risk scoring.
+- Human approval workflows.
+- Task boundaries.
+- Sandbox execution.
+- Rollback.
+- Kill-switch.
+- Telemetry.
+- Policy engine.
+- Tool access control.
+
+Rule: do not build this as a platform feature until the current discovery assistant and lead capture path have clear business demand, production evidence, and measured outcomes.
 
 ## Backlog Rules
 
@@ -212,3 +254,4 @@ Tasks:
 - Do not build an admin platform before leads are being captured.
 - Do not add pricing automation in the assistant.
 - Preserve existing visual direction.
+- Do not build complex autonomous agents before clear business workflow and control boundaries exist.

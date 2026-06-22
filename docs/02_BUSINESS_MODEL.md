@@ -37,15 +37,34 @@ The site should qualify visitors by understanding:
 8. Notification is sent to the team.
 9. Manual analysis and pricing happen outside the assistant flow.
 
+## Current Lead Infrastructure
+
+Verified locally:
+
+- Supabase lead persistence through the server-side lead API.
+- Telegram lead notification after successful lead handling.
+- Basic spam, honeypot, dwell-time, field limit, and rate-limit protection.
+
+Not part of the current verified business workflow:
+
+- OpenAI/LLM assistant.
+- WhatsApp notification.
+- Resend email notification.
+- CRM automation.
+- Automated pricing.
+- Vercel/deploy production workflow.
+
 ## Future Systems
 
-Planned, not currently verified:
+Planned later, not MVP scope:
 
-- Supabase lead database.
-- Telegram lead notifications, preferred first.
 - WhatsApp notifications as a later option.
 - Admin view or lightweight lead review flow.
+- CRM handoff or pipeline view.
+- Agent Control Layer for permission management, audit logs, approvals, telemetry, rollback, and kill-switches.
 
 ## Constraint
 
 Do not build a large platform before the lead discovery and storage path is stable.
+
+Future agent products should be priced and scoped around controlled business outcomes, not around agent count or autonomy level alone.

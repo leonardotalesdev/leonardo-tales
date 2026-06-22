@@ -8,7 +8,7 @@ Leonardo Tales helps Turkish businesses discover, scope, and later deploy practi
 
 ## Current Repository Purpose
 
-This repository currently contains a premium web prototype and the first shell of an AI discovery assistant experience. It is not yet a full AI platform.
+This repository currently contains a premium web prototype, deterministic AI discovery assistant, and verified lead-capture path. It is not yet a full AI platform.
 
 The repo should be treated as the public website plus MVP assistant surface for the first lead discovery flow.
 
@@ -41,9 +41,20 @@ After enough context is gathered, the assistant should open a contact form insid
 
 - The site is a Next.js App Router app.
 - The interface already has a strong terminal-like AI OS design.
-- The chat is currently a client-side prototype with fixed responses.
-- There is no verified LLM, Supabase, Telegram, WhatsApp, Resend, or CRM integration yet.
+- The chat is a deterministic customer representative assistant, not an LLM agent.
+- Lead submission runs through `POST /api/leads`.
+- Supabase live persistence has been verified locally.
+- Telegram live notification has been verified locally.
+- Basic spam, honeypot, dwell-time, and rate-limit protection exists for the lead path.
+- There is no verified OpenAI/LLM, WhatsApp, Resend, CRM, admin dashboard, or Vercel deployment integration yet.
+- Local development continues for now; Vercel/deploy work is intentionally postponed.
 
 ## Sprint Rule
 
 Preserve the visual direction. Do not redesign the site during MVP infrastructure and documentation sprints.
+
+## Architecture Direction
+
+Leonardo Tales should design agents as bounded operational components inside a controlled business operating system.
+
+Long-term agent systems should favor permission boundaries, auditability, human approval, telemetry, rollback, and kill-switches over uncontrolled autonomy. See `docs/13_AGENT_CONTROL_PRINCIPLES.md`.

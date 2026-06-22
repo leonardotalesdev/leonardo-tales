@@ -38,10 +38,16 @@ Avoid large visual pivots, decorative landing-page tropes, or replacing the curr
 ## Current Implementation Reality
 
 - This is a Next.js App Router project using `src/app`.
-- The visible chat in `src/components/CoreAiChat.tsx` is currently a client-side prototype with fixed responses.
-- There is no verified OpenAI, Supabase, Telegram, WhatsApp, Vercel, or Resend runtime integration in this repo yet.
+- The visible chat in `src/components/CoreAiChat.tsx` is a deterministic customer representative assistant, not an LLM agent.
+- `POST /api/leads` is the server-side lead submission boundary.
+- Supabase live persistence has been verified locally.
+- Telegram live notification has been verified locally.
+- Basic honeypot, dwell-time, field limit, and best-effort in-memory rate-limit protection exists for the lead path.
+- There is no verified OpenAI/LLM, WhatsApp, Vercel deployment/project linking, Resend, CRM, or admin workflow integration yet.
+- Local development continues for now; Vercel/deploy is intentionally postponed.
 - Do not claim integrations are working unless they are implemented and verified.
 - Do not quote prices in the assistant flow. Pricing is manual after project analysis.
+- Treat future Agent Control Layer work as architecture/backlog direction, not current MVP runtime scope.
 
 ## Engineering Constraints
 
@@ -68,3 +74,5 @@ Project OS docs live in `docs/`:
 - `docs/09_DECISION_LOG.md`
 - `docs/10_SPRINT_LOG.md`
 - `docs/11_DO_NOT_TOUCH.md`
+- `docs/12_PRODUCTION_SMOKE_CHECKLIST.md`
+- `docs/13_AGENT_CONTROL_PRINCIPLES.md`

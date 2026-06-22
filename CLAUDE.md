@@ -8,7 +8,8 @@ Important project-specific constraints:
 
 - Preserve the existing terminal-like AI OS visual direction.
 - Do not redesign the site in ordinary implementation sprints.
-- Do not claim Supabase, Telegram, WhatsApp, Vercel, Resend, or LLM integrations are working unless verified in code and runtime.
+- Supabase persistence and Telegram notification are verified locally for the lead path.
+- Do not claim WhatsApp, Vercel/deploy, Resend, CRM/admin, Agent Control Layer runtime, or LLM integrations are working unless verified in code and runtime.
 - Do not quote prices in the assistant flow.
 - Keep work small, realistic, and MVP-focused.
 - Keep `.env*` files out of git.

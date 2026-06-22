@@ -12,7 +12,8 @@ The MVP is a public website with a functional AI discovery assistant that classi
 - Lead classification into four paths.
 - Contact form opened at the right moment inside the chat panel.
 - Basic validation for contact information.
-- Storage plan for future Supabase lead table.
+- Server-side lead submission boundary.
+- Supabase lead persistence for verified local lead storage.
 - Clear fallback for uncertain leads.
 
 ## Should Have
@@ -55,12 +56,13 @@ The MVP is a public website with a functional AI discovery assistant that classi
 - Visitor can complete a discovery conversation without leaving the page.
 - The system produces a lead classification.
 - The contact form appears only after enough context is gathered.
+- Valid lead submissions pass through the server-side lead API.
 - No pricing is quoted.
 - No unverified integrations are presented as live.
 
-## Sprint 1 Implementation Status
+## Current Implementation Status
 
-Implemented locally:
+Implemented and verified locally:
 
 - Deterministic client-side discovery flow.
 - Turkish-first assistant prompts.
@@ -68,11 +70,17 @@ Implemented locally:
 - Local classification into the four MVP paths.
 - In-chat contact form.
 - Client-side required field and email validation.
-- Lead draft stored in React component state only.
+- `POST /api/leads` server-side submission boundary.
+- Server-side lead validation.
+- Supabase lead persistence.
+- Telegram notification after successful lead handling.
+- Honeypot, dwell-time, field limit, and best-effort in-memory rate-limit protection.
 
-Still not implemented:
+Still not part of MVP:
 
-- Backend persistence.
-- Supabase insert.
-- Telegram or WhatsApp notification.
 - LLM-powered assistant behavior.
+- WhatsApp notification.
+- Resend email notification.
+- Admin dashboard.
+- Automated pricing.
+- Agent Control Layer runtime.
