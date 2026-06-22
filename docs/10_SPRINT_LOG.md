@@ -396,3 +396,42 @@ Checks:
 Next safest sprint:
 
 Run a focused production readiness pass locally: verify evals, lint, build, review the production smoke checklist, and only then decide whether to resume Vercel/deploy work.
+
+## 2026-06-22 - Sprint 3.2 Local Telegram Recheck + Manual Browser QA
+
+Scope:
+
+- Re-check the local Telegram notification path with a safe synthetic lead payload.
+- Guide a small manual browser QA pass.
+- Keep Vercel/deploy, production domain work, OpenAI/LLM, new product features, UI redesign, `.env.local` edits, and MVP scope unchanged.
+
+Verification:
+
+- `.env.local` was not read, printed, edited, or committed.
+- The local dev server loaded `.env.local` without exposing values.
+- Initial safe synthetic `POST /api/leads` result: HTTP 200, `ok: true`, `persistence: "stored"`, `notification: "skipped"`.
+- The skipped notification was caused by local notification mode still being `LEADS_NOTIFICATION_MODE=none`.
+- The developer corrected local mode to `LEADS_STORAGE_MODE=supabase` and `LEADS_NOTIFICATION_MODE=telegram` without exposing values.
+- Follow-up developer-confirmed local recheck returned `persistence: "stored"` and `notification: "sent"`.
+- Developer confirmed the Telegram message was received.
+- Supabase persistence remained healthy.
+- Telegram local notification path is verified for Sprint 3.2.
+- HTTP route smoke returned 200 for `/`, `/en`, `/manifesto`, and `/en/manifesto`.
+- Manual browser QA steps were provided to the developer, but independent browser automation was unavailable and Playwright/Chrome were not installed locally.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run eval:leads` passed 6/6 scenarios with the existing non-failing Node module-type warning.
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Remaining risks:
+
+- Manual browser QA still needs developer confirmation or a browser automation tool.
+- Local synthetic smoke leads may need manual cleanup in Supabase.
+- Vercel/deploy and production-domain verification remain postponed.
+
+Next safest sprint:
+
+Complete the manual browser QA checklist, then decide whether to add lightweight browser automation before any deploy work resumes.

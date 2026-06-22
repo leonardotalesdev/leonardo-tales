@@ -213,6 +213,26 @@ Result:
 - Added Agent Control Layer to future backlog language only.
 - Reconfirmed that local development continues and Vercel/deploy is postponed.
 
+## Sprint 3.2 - Local Telegram Recheck + Manual Browser QA
+
+Status: completed for local Telegram verification; browser QA confirmation remains manual/pending.
+
+Goal: re-check the local Telegram notification path and guide a small manual browser QA pass before future deploy work.
+
+Result:
+
+- Local eval, lead anti-spam eval, lint, and build checks passed.
+- Safe synthetic lead submission returned HTTP 200 and `persistence: "stored"`.
+- Initial active local API response returned `notification: "skipped"` because local notification mode was still `LEADS_NOTIFICATION_MODE=none`.
+- After local mode was corrected to `LEADS_STORAGE_MODE=supabase` and `LEADS_NOTIFICATION_MODE=telegram`, follow-up developer-confirmed recheck returned `persistence: "stored"` and `notification: "sent"`.
+- Developer confirmed the Telegram message was received.
+- Manual browser QA steps were provided, but independent browser automation was unavailable and Playwright/Chrome were not installed.
+
+Next:
+
+- Complete manual browser QA before resuming Vercel/deploy work.
+- Consider adding a lightweight browser QA path before resuming Vercel/deploy work.
+
 ## Sprint 4 - Production Readiness
 
 Status: postponed until local MVP checks and production smoke planning are deliberately resumed.
