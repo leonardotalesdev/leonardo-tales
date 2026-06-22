@@ -161,6 +161,11 @@ The current Leonardo Tales MVP already applies early versions of these principle
 
 These are small controls, but they establish the correct operating philosophy: ship useful business capability inside visible boundaries.
 
+Sprint 3.4 should extend this control posture in two local, deterministic ways before deployment work resumes:
+
+- Clearly harmful or illegal intent, including hacking, unauthorized access, credential theft, evasion, malware, and cyber abuse, must be refused and must not open the lead form.
+- Oversized product ambitions must be reframed as realistic MVP/prototype discovery instead of being accepted as immediate full-scale build promises.
+
 ## Future Architecture
 
 Future Leonardo Tales agent systems should be described through these layers:

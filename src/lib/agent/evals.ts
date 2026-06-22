@@ -74,6 +74,7 @@ const categoryKeywords: Record<DiscoveryCategory, string[]> = {
     "hizmet",
     "randevu",
     "güzellik merkezi",
+    "güzellik merkezim",
     "kuaför",
     "klinik",
     "estetik",
@@ -279,6 +280,7 @@ function classifyNeed(business: string, friction: string) {
   const isRealEstate = containsAny(text, ["emlak", "gayrimenkul"]);
   const isAppointmentBusiness = containsAny(text, [
     "güzellik merkezi",
+    "güzellik merkezim",
     "kuaför",
     "klinik",
     "estetik",
@@ -358,7 +360,9 @@ function classifyNeed(business: string, friction: string) {
 function describeBusiness(value: string) {
   const text = normalizeText(value);
   if (text.includes("emlak") || text.includes("gayrimenkul")) return "Emlak ofisi";
-  if (text.includes("güzellik merkezi")) return "Güzellik merkezi";
+  if (text.includes("güzellik merkezi") || text.includes("güzellik merkezim")) {
+    return "Güzellik merkezi";
+  }
   return value.split(/[.!?\n]/)[0]?.trim() || value.trim();
 }
 
@@ -395,7 +399,11 @@ function formatSummary(
     return "Sizi anlıyorum. İhtiyacınız, operasyon ve iş akışlarınızı daha düzenli takip edecek bir otomasyon sistemi gibi görünüyor.\n\nBu yapı, tekrar eden işleri daha kontrollü hale getirmenize ve ekip içi takibi sadeleştirmenize yardımcı olabilir.\n\nDilerseniz detayları görüşebilmek için kısa iletişim formunu açabilirim.";
   }
 
-  if (businessLabel === "Güzellik merkezi" || text.includes("güzellik merkezi")) {
+  if (
+    businessLabel === "Güzellik merkezi" ||
+    text.includes("güzellik merkezi") ||
+    text.includes("güzellik merkezim")
+  ) {
     return "Güzellik merkezi için en doğru başlangıç genelde web sitesi ve yapay zekâ müşteri karşılama/randevu asistanı olur.\n\nBu sistem hizmetlerinizi anlatabilir, gelen soruları karşılayabilir, randevu taleplerini toplayabilir ve size düzenli müşteri talebi olarak iletebilir.\n\nBu, müşteri mesajlarını daha düzenli yönetmeniz ve dijitalde daha güçlü görünmeniz için önemli bir fırsat olabilir.\n\nDilerseniz detayları görüşebilmek için kısa iletişim formunu açabilirim.";
   }
 
@@ -606,7 +614,7 @@ const scenarios: EvalScenario[] = [
   },
   {
     id: "D",
-    input: "Bir güzellik merkezim var.",
+    input: "Benim bir güzellik merkezim var.",
     description: "Business type only maps beauty center to website + appointment assistant opportunity.",
     expect: (turn) => [
       turn.state.category === "customer_support_website"

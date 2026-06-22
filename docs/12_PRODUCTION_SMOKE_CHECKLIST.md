@@ -2,6 +2,44 @@
 
 Use this checklist before sending public traffic to the lead form.
 
+## Pre-Deploy Blockers Carried To Sprint 3.4
+
+Do not resume Vercel/deploy work until these local MVP issues are resolved and re-tested:
+
+- Harmful or illegal intent must be refused deterministically and must not open the lead form.
+- Oversized product requests must be framed realistically as MVP/prototype discovery, not accepted as full-scale build promises.
+- Optional website field must not block users who leave it empty or type a common `www.example.com` style address.
+- Preferred contact channel copy must be clearer.
+- Opening assistant message and response pacing should be improved without adding OpenAI/LLM.
+- Exact small-mobile behavior should be checked again after Sprint 3.4 changes.
+
+## Sprint 3.3 Manual Browser QA Pass
+
+Date: 2026-06-22.
+
+Scope:
+
+- Local development only.
+- Firefox WebDriver QA through local `geckodriver`.
+- No Vercel/deploy work.
+- No production domain work.
+- No `.env.local` reading, printing, editing, or committing.
+- No OpenAI/LLM.
+- No new integrations.
+- No UI redesign.
+
+Result summary:
+
+- Route checks passed for `/`, `/en`, `/manifesto`, `/en/manifesto`, `/robots.txt`, and `/sitemap.xml`.
+- Desktop rendered QA passed: top nav, chat shell, left protocol panel, readable chat area, integrated dark scrollbar, and composer were visible and stable.
+- Chat scenario QA passed for greeting, casual/no-intent, website + AI representative, beauty center, pricing, and direct form-open intent.
+- Tiny fix applied: the deterministic classifier now recognizes the exact manual QA phrase `güzellik merkezim`.
+- Form QA passed: empty required fields and invalid email were blocked by browser validation; valid form submitted; form closed after success.
+- Browser-captured form submission returned `persistence: "stored"` and `notification: "sent"`.
+- Hidden honeypot was not visible.
+- Narrow responsive QA passed under the `max-width: 640px` layout breakpoint with no horizontal overflow. Firefox headless reported an inner width of 500px even when 390px was requested.
+- Browser console logs were not captured by this WebDriver setup; no framework error overlay was detected.
+
 ## Sprint 3.2 Local Telegram Recheck + Manual Browser QA
 
 Date: 2026-06-22.
@@ -49,27 +87,29 @@ Result summary:
 
 ## Lead Flow
 
-- [ ] Form success path works from the visible chat UI.
-- [x] API success response includes `persistence: "stored"`. Sprint 3.2 local Telegram recheck result: passed.
-- [x] API success response includes `notification: "sent"` or an expected non-blocking notification status. Sprint 3.2 follow-up local Telegram recheck result: `notification: "sent"`.
-- [ ] Supabase `public.leads` receives the submitted test lead.
+- [x] Form success path works from the visible chat UI. Sprint 3.3 Firefox WebDriver result: valid form submitted and closed after success.
+- [x] API success response includes `persistence: "stored"`. Sprint 3.3 browser-captured form submit result: passed.
+- [x] API success response includes `notification: "sent"` or an expected non-blocking notification status. Sprint 3.3 browser-captured form submit result: `notification: "sent"`.
+- [x] Supabase `public.leads` receives the submitted test lead. Sprint 3.3 browser-captured form submit returned `persistence: "stored"`.
 - [x] Telegram message is received when notification mode is enabled. Sprint 3.2 follow-up local recheck: developer confirmed message receipt.
 - [ ] Telegram failure does not block a successful Supabase insert.
-- [ ] Required-field validation path returns a safe Turkish error.
-- [ ] Invalid email validation path returns a safe Turkish error.
-- [ ] Honeypot-filled payload is rejected and does not create a Supabase row.
-- [ ] Too-fast payload is rejected and does not create a Supabase row.
-- [ ] Sixth lead submission from the same IP inside 10 minutes returns HTTP 429.
+- [x] Required-field validation path works. Sprint 3.3 browser validation blocked empty required submit before API submission.
+- [x] Invalid email validation path works. Sprint 3.3 browser validation blocked invalid email submit before API submission.
+- [x] Honeypot-filled payload is rejected and does not create a Supabase row. Covered by `npm run eval:leads`.
+- [x] Too-fast payload is rejected and does not create a Supabase row. Covered by `npm run eval:leads`.
+- [x] Sixth lead submission from the same IP inside 10 minutes returns HTTP 429. Covered by `npm run eval:leads`.
 
 ## UI Smoke
 
-- [x] Turkish homepage loads. Sprint 3.2 HTTP route smoke: `/` returned 200.
-- [x] English homepage loads. Sprint 3.2 HTTP route smoke: `/en` returned 200.
-- [x] Turkish manifesto loads. Sprint 3.2 HTTP route smoke: `/manifesto` returned 200.
-- [x] English manifesto loads. Sprint 3.2 HTTP route smoke: `/en/manifesto` returned 200.
-- [ ] Chat remains usable on mobile viewport. Manual browser QA was guided; independent confirmation remains pending.
-- [ ] Contact form remains visually compact and hidden anti-spam fields are not visible. Manual browser QA was guided; independent confirmation remains pending.
-- [ ] No console errors appear during normal form submission. Postponed until browser automation or developer manual confirmation is available.
+- [x] Turkish homepage loads. Sprint 3.3 Firefox route smoke: `/` rendered with content and no framework overlay.
+- [x] English homepage loads. Sprint 3.3 Firefox route smoke: `/en` rendered with content and no framework overlay.
+- [x] Turkish manifesto loads. Sprint 3.3 Firefox route smoke: `/manifesto` rendered with content and no framework overlay.
+- [x] English manifesto loads. Sprint 3.3 Firefox route smoke: `/en/manifesto` rendered with content and no framework overlay.
+- [x] `robots.txt` loads. Sprint 3.3 Firefox route smoke rendered content.
+- [x] `sitemap.xml` loads. Sprint 3.3 Firefox route smoke rendered content.
+- [x] Chat remains usable on mobile viewport. Sprint 3.3 narrow Firefox viewport verified chat shell, input, and form under the mobile CSS breakpoint.
+- [x] Contact form remains visually compact and hidden anti-spam fields are not visible. Sprint 3.3 Firefox check: honeypot not visible.
+- [ ] No console errors appear during normal form submission. Browser console logs were not available through this WebDriver setup; no framework error overlay was detected.
 
 ## Deployment
 

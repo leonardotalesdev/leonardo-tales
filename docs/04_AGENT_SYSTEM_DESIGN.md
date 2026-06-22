@@ -35,6 +35,12 @@ It does not:
 
 The assistant should begin serious and professional, then become warm like a guide. It can feel conscious and visionary, but it must stay short, direct, and useful.
 
+Sprint 3.4 should refine this further: the opening should feel more distinctive to Leonardo Tales, intelligent, warm, slightly witty, and professional. It should invite the visitor to write naturally, then guide them toward:
+
+"İşinizi, projenizi veya kurmak istediğiniz yapay zekâ sistemini kısaca anlatın; size doğru başlangıç noktasını netleştireyim."
+
+The assistant must not claim consciousness, sound arrogant, sound mystical, or fall into generic chatbot tone.
+
 ## Conversation Principles
 
 - Ask one question at a time.
@@ -46,6 +52,8 @@ The assistant should begin serious and professional, then become warm like a gui
 - Classify based on business need, not user jargon.
 - If uncertain, use `Henüz Netleşmedi`.
 - Open a contact form only after enough context is collected.
+- Refuse clearly harmful or illegal intent instead of classifying it as a lead.
+- Frame oversized ambitions as realistic MVP discovery/prototype work instead of overpromising.
 
 ## Discovery Flow
 
@@ -75,6 +83,65 @@ If the visitor asks for price, the assistant must not quote a price.
 Current Turkish policy:
 
 "Benim fiyat verme yetkim bulunmuyor. Kapsam, kullanılacak araçlar ve ihtiyaç duyulan çalışma süresi analiz edildikten sonra size uygun plan ve teklif iletilir. İsterseniz kısa iletişim formunu açabilirim."
+
+## Safety Refusal
+
+Sprint 3.4 must add deterministic refusal behavior for clearly harmful or illegal intent.
+
+The assistant must not help with:
+
+- Hacking or unauthorized access.
+- Cyber abuse.
+- Credential theft.
+- Evasion.
+- Malware.
+- Illegal activity.
+
+For clearly harmful intent, the assistant must not open the lead form.
+
+Expected Turkish refusal:
+
+"Bu tür yetkisiz veya zararlı işlemlere yardımcı olamam. Leonardo Tales yalnızca yasal, güvenli ve işletme odaklı yapay zekâ sistemleri kurar. İsterseniz siber güvenlik farkındalığı, güvenli otomasyon veya yasal iş süreçleri için yardımcı olabilirim."
+
+## Oversized Product Requests
+
+Sprint 3.4 must add realistic scope handling for oversized product requests.
+
+Example user request:
+
+"Google’a rakip olacak yapay zekâ destekli arama motoru kurmak istiyorum."
+
+Expected behavior:
+
+- Acknowledge the vision.
+- Set realistic scope.
+- Offer MVP framing.
+- Offer the form only as a strategic discovery call, not as if a full Google competitor can be built immediately.
+
+Expected Turkish direction:
+
+"Bu büyük ölçekli bir ürün vizyonu. İlk adım olarak belirli bir alan için küçük bir arama/keşif prototipi, bilgi tabanı veya niş arama asistanı tasarlanabilir."
+
+## Form Refinement Notes
+
+Sprint 3.4 must refine the lead form without expanding scope:
+
+- Website remains optional.
+- Empty website is accepted.
+- Common `www.example.com` style input should normalize to `https://www.example.com` client-side or server-side.
+- Browser-native optional-field blocking such as "Lütfen bir URL girin" should be avoided for optional website.
+- Website placeholder should become clearer, for example `https://ornek.com` or `Web siteniz varsa`.
+- Preferred contact label should become clearer, for example `Size hangi kanaldan ulaşalım?`.
+- Add a neutral contact option such as `Fark etmez` or `Kararsızım`, keeping the field optional if practical.
+
+## Response Pacing
+
+Sprint 3.4 should adjust the deterministic local thinking state:
+
+- Keep a visible state such as `Yanıt hazırlanıyor...`.
+- Use a natural local delay around 1.2-2 seconds.
+- Do not add external APIs.
+- Keep the behavior deterministic and non-flaky.
 
 ## Classification Hints
 

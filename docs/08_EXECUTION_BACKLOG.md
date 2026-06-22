@@ -233,6 +233,59 @@ Next:
 - Complete manual browser QA before resuming Vercel/deploy work.
 - Consider adding a lightweight browser QA path before resuming Vercel/deploy work.
 
+## Sprint 3.3 - Manual Browser QA Pass
+
+Status: completed for local Firefox WebDriver QA.
+
+Goal: perform a focused browser QA pass for the local MVP without adding product scope or resuming deploy work.
+
+Result:
+
+- Verified `/`, `/en`, `/manifesto`, `/en/manifesto`, `/robots.txt`, and `/sitemap.xml`.
+- Verified desktop chat shell, top nav, left protocol panel, readable chat area, composer input, response pacing, and dark integrated scrollbar.
+- Verified chat scenarios for greeting, casual/no-intent, website + AI representative, beauty center, pricing guardrail, and direct form-open intent.
+- Verified empty required fields, invalid email, valid form submit, form close after success, accurate success message, hidden honeypot, Supabase `stored`, and Telegram `sent`.
+- Verified narrow responsive layout under the mobile CSS breakpoint with no horizontal overflow.
+- Applied a tiny deterministic classifier fix for `güzellik merkezim` and mirrored it in local evals.
+
+Remaining:
+
+- Exact 390px viewport should still be checked on a real browser/device because Firefox headless reported 500px inner width.
+- Browser console logs were not available through the local WebDriver setup.
+- Vercel/deploy remains postponed.
+
+## Sprint 3.4 - Chat UX, Safety Guardrails & Form Refinement
+
+Status: next / planned. Active implementation is paused until this sprint is deliberately started.
+
+Goal: resolve manual QA findings before any deploy work resumes, without adding OpenAI/LLM, new integrations, broad redesign, or MVP scope expansion.
+
+Objectives:
+
+- Improve the opening assistant message so it feels more distinctive, intelligent, warm, slightly witty, and professional while avoiding consciousness claims, arrogance, mysticism, or generic chatbot tone.
+- Improve response pacing with a deterministic visible thinking state such as `Yanıt hazırlanıyor...` and a natural local delay around 1.2-2 seconds.
+- Fix optional website behavior so empty website is accepted and `www.example.com` can be normalized to `https://www.example.com` without browser-native optional-field blocking.
+- Improve website placeholder/copy, for example `https://ornek.com` or `Web siteniz varsa`.
+- Rename preferred contact label to clearer Turkish, such as `Size hangi kanaldan ulaşalım?`.
+- Add a neutral contact option such as `Fark etmez` or `Kararsızım`, and keep the field optional if practical.
+- Add deterministic harmful-intent refusal for hacking, unauthorized access, cyber abuse, credential theft, evasion, malware, or illegal activity.
+- Ensure harmful/illegal intent does not open the lead form.
+- Add deterministic eval scenarios for harmful intent.
+- Add realistic-scope behavior for oversized product requests such as a Google-scale AI search engine, framing them as MVP discovery/prototype work instead of overpromising.
+- Add deterministic eval scenarios for oversized product requests.
+- Keep the current terminal-like premium UI style intact.
+- Keep Vercel/deploy postponed.
+
+Known manual QA findings carried into Sprint 3.4:
+
+- Opening assistant message works but should be more engaging and brand-distinct.
+- Current response pacing still feels too instant.
+- Optional website input can block users who enter `www.leonardotales.com`.
+- Preferred contact channel label is unclear.
+- Harmful intent such as unauthorized hacking is accepted too easily and must be refused before deploy.
+- Oversized product ambitions need realistic MVP framing.
+- Future UI direction should move toward chat-first hero architecture, especially on mobile, but this should be planned carefully rather than redesigned hastily.
+
 ## Sprint 4 - Production Readiness
 
 Status: postponed until local MVP checks and production smoke planning are deliberately resumed.

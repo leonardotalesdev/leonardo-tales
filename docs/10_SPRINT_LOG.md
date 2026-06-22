@@ -435,3 +435,119 @@ Remaining risks:
 Next safest sprint:
 
 Complete the manual browser QA checklist, then decide whether to add lightweight browser automation before any deploy work resumes.
+
+## 2026-06-22 - Sprint 3.3 Manual Browser QA Pass
+
+Scope:
+
+- Perform a focused local browser QA pass for the Leonardo Tales MVP.
+- Keep Vercel/deploy, production domain work, OpenAI/LLM, new integrations, UI redesign, `.env.local`, and MVP scope unchanged.
+
+Verification method:
+
+- Used local Firefox through `geckodriver`.
+- Captured screenshots outside the repo under `/tmp`.
+- Did not read, print, edit, or commit `.env.local`.
+
+Route QA:
+
+- `/`, `/en`, `/manifesto`, `/en/manifesto`, `/robots.txt`, and `/sitemap.xml` rendered with content and no framework error overlay.
+
+Desktop UI QA:
+
+- Top nav rendered correctly.
+- Chat shell rendered correctly.
+- Left protocol panel looked stable.
+- Chat area remained readable.
+- Composer input worked.
+- Dark integrated chat scrollbar remained consistent; no distracting white strip was visible.
+- Response pacing worked through the browser-driven chat scenarios.
+
+Chat behavior QA:
+
+- `Merhaba` returned a short Turkish greeting and did not open the form.
+- `Canım sıkıldı, öylesine yazdım.` responded lightly and did not open the form.
+- `Web sitesi istiyorum, içinde yapay zekâ müşteri temsilcisi olsun.` classified the need and offered the form without a long consulting flow.
+- `Benim bir güzellik merkezim var.` now returns the beauty-center web + appointment/customer assistant guidance.
+- `Fiyat ne kadar?` did not quote a price.
+- `Formu aç` opened the form.
+- No fake integration claims appeared in chat responses.
+
+Fix:
+
+- Added `güzellik merkezim` to the deterministic classifier and mirrored eval logic so the exact manual QA phrase maps to the beauty-center path.
+
+Form QA:
+
+- Empty required submit was blocked by browser validation.
+- Invalid email submit was blocked by browser validation.
+- Valid form submitted through the visible chat UI.
+- Form closed after success.
+- Success message was accurate.
+- Browser-captured API result returned `persistence: "stored"` and `notification: "sent"`.
+- Hidden honeypot was not visible.
+
+Mobile QA:
+
+- Narrow Firefox viewport triggered the mobile CSS layout under the `max-width: 640px` breakpoint.
+- Chat shell, input, and form remained usable.
+- No horizontal overflow was detected.
+- Firefox headless reported an inner width of 500px even when 390px was requested, so exact 390px verification remains a residual manual-device risk.
+
+Checks:
+
+- `npm run eval:agent` passed 10/10 scenarios.
+- `npm run eval:leads` passed 6/6 scenarios with the existing non-failing Node module-type warning.
+- `npm run lint` passed.
+- `npm run build` passed.
+
+Remaining risks:
+
+- Browser console logs were not available through this WebDriver setup; no framework overlay was detected.
+- Local synthetic smoke leads may need manual cleanup in Supabase.
+- Vercel/deploy and production-domain verification remain postponed.
+
+Next safest sprint:
+
+Either verify exact 390px mobile behavior on a real browser/device or add a lightweight browser QA command before any deploy work resumes.
+
+## 2026-06-22 - Session Closeout & Sprint 3.4 Preparation
+
+Scope:
+
+- Pause active implementation.
+- Record the verified local MVP state.
+- Capture manual QA findings and next-sprint objectives.
+- Do not add OpenAI/LLM, new runtime features, new integrations, UI redesign, Vercel/deploy work, or `.env.local` changes.
+
+Current verified local MVP state:
+
+- Local MVP is working.
+- Supabase persistence is verified locally with `persistence: "stored"`.
+- Telegram notification is verified locally with `notification: "sent"` and message received.
+- Spam protections exist: honeypot, minimum dwell time, field limits, and best-effort in-memory IP rate limit.
+- `npm run eval:agent` passes 10/10.
+- `npm run eval:leads` passes 6/6.
+- `npm run lint` passes.
+- `npm run build` passes.
+- Vercel/deploy remains intentionally postponed.
+
+Manual QA findings carried forward:
+
+- Opening assistant message works but should feel more distinctive, warm, slightly witty, intelligent, and professional without claiming consciousness or sounding mystical/arrogant.
+- Response pacing still feels too instant; next sprint should adjust the deterministic thinking state and delay.
+- Optional website field can block `www.leonardotales.com`; next sprint should accept empty website and normalize `www.example.com` to `https://www.example.com`.
+- Preferred contact channel label is unclear; next sprint should use clearer Turkish copy and add a neutral option like `Fark etmez` or `Kararsızım`.
+- Harmful intent such as unauthorized hacking was accepted too easily; this is a deploy blocker.
+- Oversized product requests such as building a Google competitor need realistic MVP framing.
+- The future UI direction is chat-first hero architecture, especially on mobile, but no redesign is started in this closeout.
+
+Sprint 3.4 prepared:
+
+- Name: `Sprint 3.4 - Chat UX, Safety Guardrails & Form Refinement`.
+- Purpose: fix chat UX, harmful-intent refusal, oversized-scope framing, and form clarity before deploy work resumes.
+- Constraints: no OpenAI/LLM, no new integrations, no Vercel/deploy, no MVP expansion, preserve the current terminal-like premium visual style.
+
+Next safest prompt:
+
+`Start Sprint 3.4: Chat UX, Safety Guardrails & Form Refinement. First inspect docs/10_SPRINT_LOG.md, docs/08_EXECUTION_BACKLOG.md, docs/04_AGENT_SYSTEM_DESIGN.md, docs/agent-templates/leonardo-tales-customer-representative-agent.md, src/components/CoreAiChat.tsx, src/lib/agent/evals.ts, and src/lib/leads/validation.ts. Do not add OpenAI/LLM or resume deploy. Implement only the documented Sprint 3.4 fixes, then run evals, lint, build, and browser QA.`
