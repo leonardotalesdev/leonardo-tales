@@ -25,6 +25,25 @@ type DiscoveryMessage = {
   tone?: "gold" | "neon";
 };
 
+type AgentProcessKey =
+  | "visitor.greet"
+  | "need.detect"
+  | "solution.map"
+  | "human.review";
+
+type AgentProcessState = "active" | "scanning" | "ready" | "waiting";
+
+type QuickIntent = {
+  label: string;
+  value: string;
+  category: DiscoveryCategory;
+};
+
+type ProcessStepCopy = {
+  label: string;
+  detail: AgentProcessKey;
+};
+
 type LeadDraft = {
   name: string;
   email: string;
@@ -72,6 +91,7 @@ const chatCopy = {
     label: "Hakan Leonardo yapay zekâ keşif arayüzü",
     title: "Yapay Zekâ İş Temsilcisi",
     status: "HAKAN_LEONARDO / ONLINE",
+    agentBadge: "AI Temsilci",
     inputLabel: "Keşif asistanına cevap yaz",
     submit: "GÖNDER",
     processing: "Yanıt hazırlanıyor...",
@@ -87,9 +107,61 @@ const chatCopy = {
         id: 1,
         role: "agent",
         content:
-          "Merhaba. Ben Hakan Leonardo’nun yapay zekâ iş temsilcisiyim. İşinizi, projenizi veya kurmak istediğiniz yapay zekâ sistemini kısaca anlatın; size doğru başlangıç noktasını netleştireyim.",
+          "Merhaba, ben Hakan Leonardo’nun AI iş temsilcisiyim.\n\nWeb sitenize müşteri karşılayan, lead toplayan veya satış/operasyon akışlarını düzenleyen bir sistem kurmak için sizi doğru başlangıca yönlendirebilirim.\n\nNereden başlamak istersiniz?",
       },
     ],
+    quickIntentLabel: "Hızlı başlangıç seçin",
+    quickIntents: [
+      {
+        label: "AI müşteri temsilcisi kurmak istiyorum",
+        value: "AI müşteri temsilcisi kurmak istiyorum",
+        category: "customer_support_website",
+      },
+      {
+        label: "Satış / teklif sistemimi otomatikleştirmek istiyorum",
+        value: "Satış / teklif sistemimi otomatikleştirmek istiyorum",
+        category: "sales_quote",
+      },
+      {
+        label: "Operasyon süreçlerimi sadeleştirmek istiyorum",
+        value: "Operasyon süreçlerimi sadeleştirmek istiyorum",
+        category: "operations_automation",
+      },
+      {
+        label: "Henüz bilmiyorum, beni yönlendir",
+        value: "Henüz bilmiyorum, beni yönlendir",
+        category: "unclear",
+      },
+    ],
+    processLabel: "Ajan süreci",
+    processSteps: {
+      "visitor.greet": {
+        label: "Karşılama",
+        detail: "visitor.greet",
+      },
+      "need.detect": {
+        label: "İhtiyaç Analizi",
+        detail: "need.detect",
+      },
+      "solution.map": {
+        label: "Çözüm Haritası",
+        detail: "solution.map",
+      },
+      "human.review": {
+        label: "İnsan Onayı",
+        detail: "human.review",
+      },
+    },
+    nextQuestions: {
+      customer_support_website:
+        "Başlangıç iyi. Müşteri temsilcisi hangi kanalda çalışmalı: web sitesi, WhatsApp, randevu/mesaj akışı veya hepsi mi?",
+      sales_quote:
+        "Anladım. Satış/teklif tarafında en çok nerede zaman kaybediyorsunuz: lead toplama, müşteri özeti, teklif hazırlama veya takip mi?",
+      operations_automation:
+        "Tamam. Operasyonda sadeleştirmek istediğiniz ilk akış hangisi: görev takibi, form/veri aktarımı, raporlama veya ekip içi takip mi?",
+      unclear:
+        "Sorun değil. Önce işinizi ve şu anda en çok vakit alan müşteri, satış veya operasyon sürecini tek cümleyle yazın.",
+    },
     frictionQuestion:
       "Size daha doğru yardımcı olabilmem için şunu netleştirelim: ihtiyacınız daha çok web sitesi ve müşteri karşılama, satış/teklif süreci veya operasyon/iş akışı tarafında mı?",
     unclearGuidance:
@@ -144,6 +216,7 @@ const chatCopy = {
     label: "Hakan Leonardo AI discovery interface",
     title: "AI Business Representative",
     status: "HAKAN_LEONARDO / ONLINE",
+    agentBadge: "AI Representative",
     inputLabel: "Reply to the discovery assistant",
     submit: "SEND",
     processing: "Preparing response...",
@@ -159,9 +232,61 @@ const chatCopy = {
         id: 1,
         role: "agent",
         content:
-          "Hello. I am Hakan Leonardo’s AI discovery assistant. Briefly describe your business, project, or the AI system you want to build; I will clarify the right starting point.",
+          "Hello, I am Hakan Leonardo’s AI business representative.\n\nI can guide you toward a system that greets customers, captures leads, or organizes sales and operations flows for your website.\n\nWhere would you like to begin?",
       },
     ],
+    quickIntentLabel: "Choose a quick start",
+    quickIntents: [
+      {
+        label: "I want to build an AI customer representative",
+        value: "I want to build an AI customer representative",
+        category: "customer_support_website",
+      },
+      {
+        label: "I want to automate sales / proposals",
+        value: "I want to automate sales / proposals",
+        category: "sales_quote",
+      },
+      {
+        label: "I want to simplify operations workflows",
+        value: "I want to simplify operations workflows",
+        category: "operations_automation",
+      },
+      {
+        label: "I am not sure, guide me",
+        value: "I am not sure, guide me",
+        category: "unclear",
+      },
+    ],
+    processLabel: "Agent process",
+    processSteps: {
+      "visitor.greet": {
+        label: "Greeting",
+        detail: "visitor.greet",
+      },
+      "need.detect": {
+        label: "Need Analysis",
+        detail: "need.detect",
+      },
+      "solution.map": {
+        label: "Solution Map",
+        detail: "solution.map",
+      },
+      "human.review": {
+        label: "Human Review",
+        detail: "human.review",
+      },
+    },
+    nextQuestions: {
+      customer_support_website:
+        "Good starting point. Where should the representative work first: website, WhatsApp, appointments/messages, or all of them?",
+      sales_quote:
+        "Understood. Where does sales lose the most time today: lead intake, customer summaries, proposal drafting, or follow-up?",
+      operations_automation:
+        "Understood. Which operations flow should be simplified first: task tracking, form/data handoff, reporting, or internal follow-up?",
+      unclear:
+        "No problem. In one sentence, describe your business and the customer, sales, or operations process that takes the most time.",
+    },
     frictionQuestion:
       "Which process is hardest right now: customer messages, website/digital presence, sales/proposals, operations/workflows, or unclear?",
     unclearGuidance:
@@ -217,11 +342,17 @@ const chatCopy = {
     label: string;
     title: string;
     status: string;
+    agentBadge: string;
     inputLabel: string;
     submit: string;
     processing: string;
     prompts: Record<DiscoveryStep, string>;
     messages: DiscoveryMessage[];
+    quickIntentLabel: string;
+    quickIntents: QuickIntent[];
+    processLabel: string;
+    processSteps: Record<AgentProcessKey, ProcessStepCopy>;
+    nextQuestions: Record<DiscoveryCategory, string>;
     frictionQuestion: string;
     unclearGuidance: string;
     casualReply: string;
@@ -787,7 +918,169 @@ function normalizeWebsiteInput(value: string) {
   return trimmedValue;
 }
 
-export function CoreAiChat({ locale }: { locale: Locale }) {
+function detectGuidedIntent(command: string): DiscoveryCategory | null {
+  const text = normalizeText(command);
+
+  if (
+    containsAny(text, [
+      "ai müşteri temsilcisi kurmak",
+      "müşteri temsilcisi kurmak",
+      "customer representative",
+      "müşteri temsilcisi istiyorum",
+    ])
+  ) {
+    return "customer_support_website";
+  }
+
+  if (
+    containsAny(text, [
+      "satış / teklif",
+      "satış teklif",
+      "teklif sistemimi",
+      "sales / proposal",
+      "sales proposal",
+      "automate sales",
+    ])
+  ) {
+    return "sales_quote";
+  }
+
+  if (
+    containsAny(text, [
+      "operasyon süreçlerimi",
+      "operasyon sureclerimi",
+      "iş akışı sadeleştirmek",
+      "workflow",
+      "operations workflows",
+      "simplify operations",
+    ])
+  ) {
+    return "operations_automation";
+  }
+
+  if (
+    containsAny(text, [
+      "henüz bilmiyorum",
+      "henuz bilmiyorum",
+      "beni yönlendir",
+      "beni yonlendir",
+      "not sure",
+      "guide me",
+    ])
+  ) {
+    return "unclear";
+  }
+
+  return null;
+}
+
+function shouldAskStructuredQuestion(command: string, category: DiscoveryCategory) {
+  const text = normalizeText(command);
+
+  if (category === "unclear") {
+    return isUncertainText(command) || detectGuidedIntent(command) === "unclear";
+  }
+
+  return (
+    detectGuidedIntent(command) === category ||
+    (command.length < 96 &&
+      containsAny(text, [
+        "kurmak istiyorum",
+        "otomatikleştirmek istiyorum",
+        "otomatiklestirmek istiyorum",
+        "sadeleştirmek istiyorum",
+        "sadelestirmek istiyorum",
+        "want to build",
+        "want to automate",
+        "want to simplify",
+      ]))
+  );
+}
+
+function getAgentProcessStates(
+  step: DiscoveryStep,
+  isProcessing: boolean,
+): Record<AgentProcessKey, AgentProcessState> {
+  if (step === "completed") {
+    return {
+      "visitor.greet": "ready",
+      "need.detect": "ready",
+      "solution.map": "ready",
+      "human.review": "ready",
+    };
+  }
+
+  if (step === "contact_form") {
+    return {
+      "visitor.greet": "ready",
+      "need.detect": "ready",
+      "solution.map": "ready",
+      "human.review": isProcessing ? "scanning" : "active",
+    };
+  }
+
+  if (step === "contact_prompt") {
+    return {
+      "visitor.greet": "ready",
+      "need.detect": "ready",
+      "solution.map": isProcessing ? "scanning" : "ready",
+      "human.review": "waiting",
+    };
+  }
+
+  if (step === "friction") {
+    return {
+      "visitor.greet": "ready",
+      "need.detect": isProcessing ? "scanning" : "active",
+      "solution.map": "waiting",
+      "human.review": "waiting",
+    };
+  }
+
+  return {
+    "visitor.greet": "active",
+    "need.detect": isProcessing ? "scanning" : "waiting",
+    "solution.map": "waiting",
+    "human.review": "waiting",
+  };
+}
+
+function formatLeadUnderstandingSummary(
+  category: DiscoveryCategory,
+  business: string,
+  need: string,
+  locale: Locale,
+) {
+  const businessLabel =
+    business && !detectGuidedIntent(business) ? describeBusiness(business) : "";
+  const needLabel = describeNeed(category, `${business} ${need}`);
+
+  if (locale === "en") {
+    if (category === "unclear") {
+      return "Summary: the need is not fully clear yet. A short human-reviewed discovery conversation is the right next step.";
+    }
+
+    return `Summary: I understand this as ${categoryLabels[category]} for ${businessLabel || "your business"}. The first scope is ${needLabel}. I can now open the human-reviewed discovery form.`;
+  }
+
+  if (category === "unclear") {
+    return "Özet: ihtiyaç henüz tam netleşmedi. Kısa, insan onaylı bir keşif görüşmesi en doğru sonraki adım olur.";
+  }
+
+  return `Özet: bunu ${businessLabel || "işletmeniz"} için ${categoryLabels[category]} ihtiyacı olarak anladım. İlk kapsam: ${needLabel}. Şimdi insan onaylı keşif formunu açabilirim.`;
+}
+
+export function CoreAiChat({
+  locale,
+  onIntentChange,
+}: {
+  locale: Locale;
+  onIntentChange?: (
+    intent: DiscoveryCategory,
+    step: DiscoveryStep,
+    isProcessing: boolean,
+  ) => void;
+}) {
   const copy = chatCopy[locale];
   const [messages, setMessages] = useState<DiscoveryMessage[]>(copy.messages);
   const [command, setCommand] = useState("");
@@ -802,6 +1095,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const didMountScrollRef = useRef(false);
   const previousStepRef = useRef<DiscoveryStep>(step);
   const responseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const messageIdRef = useRef(
@@ -809,6 +1103,11 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   );
 
   useEffect(() => {
+    if (!didMountScrollRef.current) {
+      didMountScrollRef.current = true;
+      return;
+    }
+
     const animationFrame = requestAnimationFrame(() => {
       scrollRef.current?.scrollTo({
         top: scrollRef.current.scrollHeight,
@@ -836,6 +1135,10 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     };
   }, []);
 
+  useEffect(() => {
+    onIntentChange?.(category, step, isProcessing);
+  }, [category, isProcessing, onIntentChange, step]);
+
   function createMessage(
     role: DiscoveryMessage["role"],
     content: string,
@@ -858,6 +1161,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
 
   function prepareAssistantResponse(trimmedCommand: string) {
     const nextMessages: DiscoveryMessage[] = [];
+    const guidedIntent = detectGuidedIntent(trimmedCommand);
 
     if (isHarmfulIntent(trimmedCommand)) {
       setCategory("unclear");
@@ -892,6 +1196,18 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
 
     if (wantsDirectContact(trimmedCommand) && step !== "contact_form") {
       setStep("contact_form");
+      nextMessages.push(
+        createMessage(
+          "agent",
+          formatLeadUnderstandingSummary(
+            category,
+            businessSummary,
+            frictionSummary,
+            locale,
+          ),
+          "neon",
+        ),
+      );
       nextMessages.push(createMessage("agent", copy.openFormHint, "gold"));
       appendMessages(nextMessages);
       return;
@@ -929,6 +1245,15 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
         return;
       }
 
+      if (guidedIntent) {
+        setBusinessSummary(trimmedCommand);
+        setCategory(guidedIntent);
+        setStep("friction");
+        nextMessages.push(createMessage("agent", copy.nextQuestions[guidedIntent], "gold"));
+        appendMessages(nextMessages);
+        return;
+      }
+
       const firstClassification = classifyNeed(trimmedCommand, "");
       setBusinessSummary(trimmedCommand);
 
@@ -938,20 +1263,36 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       ) {
         setFrictionSummary(describeNeed(firstClassification.category, trimmedCommand));
         setCategory(firstClassification.category);
-        setStep("contact_prompt");
-        nextMessages.push(
-          createMessage(
-            "agent",
-            formatSummary(
-              firstClassification.category,
-              trimmedCommand,
-              describeNeed(firstClassification.category, trimmedCommand),
-              locale,
-              copy.unclearContactOffer,
+        if (
+          shouldAskStructuredQuestion(
+            trimmedCommand,
+            firstClassification.category,
+          )
+        ) {
+          setStep("friction");
+          nextMessages.push(
+            createMessage(
+              "agent",
+              copy.nextQuestions[firstClassification.category],
+              "gold",
             ),
-            "neon",
-          ),
-        );
+          );
+        } else {
+          setStep("contact_prompt");
+          nextMessages.push(
+            createMessage(
+              "agent",
+              formatSummary(
+                firstClassification.category,
+                trimmedCommand,
+                describeNeed(firstClassification.category, trimmedCommand),
+                locale,
+                copy.unclearContactOffer,
+              ),
+              "neon",
+            ),
+          );
+        }
       } else {
         setStep("friction");
         nextMessages.push(createMessage("agent", copy.frictionQuestion, "gold"));
@@ -992,6 +1333,18 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     } else if (step === "contact_prompt") {
       if (wantsFormConfirmation(trimmedCommand)) {
         setStep("contact_form");
+        nextMessages.push(
+          createMessage(
+            "agent",
+            formatLeadUnderstandingSummary(
+              category,
+              businessSummary,
+              frictionSummary,
+              locale,
+            ),
+            "neon",
+          ),
+        );
         nextMessages.push(createMessage("agent", copy.openFormHint, "gold"));
       } else {
         nextMessages.push(createMessage("agent", copy.formClosedHint));
@@ -1005,10 +1358,7 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
     appendMessages(nextMessages);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const trimmedCommand = command.trim();
+  function submitCommand(trimmedCommand: string) {
     if (!trimmedCommand || isProcessing) {
       return;
     }
@@ -1022,6 +1372,15 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       setIsProcessing(false);
       responseTimerRef.current = null;
     }, responseDelayMs);
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    submitCommand(command.trim());
+  }
+
+  function handleQuickIntent(value: string) {
+    submitCommand(value);
   }
 
   function updateLeadDraft<Field extends keyof LeadDraft>(
@@ -1120,7 +1479,6 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
       setStep("completed");
       setLeadDraft(emptyLeadDraft);
       setWebsiteUrl("");
-      setFormStartedAt(Date.now());
       appendMessages([createMessage("agent", result.message || copy.success, "neon")]);
     } catch {
       setFormError(
@@ -1132,6 +1490,8 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
   }
 
   const placeholder = copy.prompts[step];
+  const shouldShowQuickIntents = step === "business" && !isProcessing;
+
   return (
     <div className="core-chat-shell" aria-label={copy.label}>
       <section className="core-chat-main">
@@ -1149,7 +1509,9 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
               className={
                 message.role === "user"
                   ? "chat-message chat-message-user"
-                  : "chat-message chat-message-agent"
+                  : message.id === 1
+                    ? "chat-message chat-message-agent chat-message-intro"
+                    : "chat-message chat-message-agent"
               }
               key={message.id}
             >
@@ -1165,10 +1527,37 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
                       : "chat-message-text"
                 }
               >
+                {message.id === 1 && message.role === "agent" ? (
+                  <span className="chat-message-agent-label">
+                    {copy.agentBadge}
+                  </span>
+                ) : null}
                 {message.content}
               </span>
             </div>
           ))}
+
+          {shouldShowQuickIntents ? (
+            <div className="core-chat-quick-intents" aria-label={copy.quickIntentLabel}>
+              <span>{copy.quickIntentLabel}</span>
+              <div>
+                {copy.quickIntents.map((intent) => (
+                  <button
+                    data-intent={intent.category}
+                    disabled={isProcessing}
+                    key={intent.value}
+                    onClick={() => handleQuickIntent(intent.value)}
+                    type="button"
+                  >
+                    <span className="core-chat-quick-icon" aria-hidden="true">
+                      <QuickIntentIcon category={intent.category} />
+                    </span>
+                    <span>{intent.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {isProcessing ? (
             <div className="chat-message chat-message-agent chat-message-processing">
@@ -1317,6 +1706,269 @@ export function CoreAiChat({ locale }: { locale: Locale }) {
           </button>
         </form>
       </section>
+    </div>
+  );
+}
+
+const heroCapabilityCards = {
+  tr: [
+    {
+      icon: "network",
+      title: "AI müşteri temsilcisi",
+      status: "visitor.greet",
+      category: "customer_support_website" as const,
+    },
+    {
+      icon: "database",
+      title: "AI satış / teklif asistanı",
+      status: "sales.brief",
+      category: "sales_quote" as const,
+    },
+    {
+      icon: "workflow",
+      title: "AI iş akışı otomasyonu",
+      status: "ops.route",
+      category: "operations_automation" as const,
+    },
+    {
+      icon: "secure",
+      title: "insan onaylı sistem",
+      status: "human.review",
+      category: "unclear" as const,
+    },
+  ],
+  en: [
+    {
+      icon: "network",
+      title: "AI customer representative",
+      status: "visitor.greet",
+      category: "customer_support_website" as const,
+    },
+    {
+      icon: "database",
+      title: "AI sales / proposal assistant",
+      status: "sales.brief",
+      category: "sales_quote" as const,
+    },
+    {
+      icon: "workflow",
+      title: "AI workflow automation",
+      status: "ops.route",
+      category: "operations_automation" as const,
+    },
+    {
+      icon: "secure",
+      title: "human-approved system",
+      status: "human.review",
+      category: "unclear" as const,
+    },
+  ],
+} satisfies Record<
+  Locale,
+  {
+    icon: string;
+    title: string;
+    status: string;
+    category: DiscoveryCategory;
+  }[]
+>;
+
+function getHeroCapabilityState(
+  category: DiscoveryCategory,
+  activeIntent: DiscoveryCategory,
+  agentStep: DiscoveryStep,
+) {
+  if (category === "unclear") {
+    if (
+      agentStep === "contact_prompt" ||
+      agentStep === "contact_form" ||
+      agentStep === "completed"
+    ) {
+      return "enabled";
+    }
+
+    return "enabled";
+  }
+
+  if (activeIntent === category) {
+    return "active";
+  }
+
+  if (category === "sales_quote") {
+    return "ready";
+  }
+
+  if (category === "operations_automation") {
+    return "online";
+  }
+
+  return "ready";
+}
+
+function QuickIntentIcon({ category }: { category: DiscoveryCategory }) {
+  if (category === "sales_quote") {
+    return <CapabilityIcon type="database" />;
+  }
+
+  if (category === "operations_automation") {
+    return <CapabilityIcon type="workflow" />;
+  }
+
+  if (category === "unclear") {
+    return <CapabilityIcon type="secure" />;
+  }
+
+  return <CapabilityIcon type="network" />;
+}
+
+function CapabilityIcon({ type }: { type: string }) {
+  if (type === "network") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 7 43 13v13l-11 7-11-7V13l11-6Z" />
+        <path d="M14 33 25 39v13l-11 7-11-7V39l11-6Z" />
+        <path d="M50 33 61 39v13l-11 7-11-7V39l11-6Z" />
+        <path d="M24 28 17 35" />
+        <path d="M40 28 47 35" />
+      </svg>
+    );
+  }
+
+  if (type === "database") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="32" cy="14" rx="22" ry="8" />
+        <path d="M10 14v12c0 4 10 8 22 8s22-4 22-8V14" />
+        <path d="M10 26v12c0 4 10 8 22 8s22-4 22-8V26" />
+        <path d="M10 38v12c0 4 10 8 22 8s22-4 22-8V38" />
+      </svg>
+    );
+  }
+
+  if (type === "workflow") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M25 8h14v10H25z" />
+        <path d="M8 46h14v10H8z" />
+        <path d="M25 46h14v10H25z" />
+        <path d="M42 46h14v10H42z" />
+        <path d="M32 18v12" />
+        <path d="M15 46V34h34v12" />
+        <path d="M32 34v12" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32 5 52 14v17c0 14-8 24-20 29C20 55 12 45 12 31V14l20-9Z" />
+      <path d="M24 33h16v14H24z" />
+      <path d="M27 33v-6a5 5 0 0 1 10 0v6" />
+      <path d="M32 39v4" />
+    </svg>
+  );
+}
+
+export function HeroAgentExperience({
+  locale,
+  capabilityLabel,
+}: {
+  locale: Locale;
+  capabilityLabel: string;
+}) {
+  const [activeIntent, setActiveIntent] =
+    useState<DiscoveryCategory>("customer_support_website");
+  const [agentStep, setAgentStep] = useState<DiscoveryStep>("business");
+  const [isAgentProcessing, setIsAgentProcessing] = useState(false);
+  const cards = heroCapabilityCards[locale];
+  const processCopy = chatCopy[locale];
+  const processStates = getAgentProcessStates(agentStep, isAgentProcessing);
+  const processEntries = Object.entries(processCopy.processSteps) as [
+    AgentProcessKey,
+    ProcessStepCopy,
+  ][];
+
+  function handleIntentChange(
+    intent: DiscoveryCategory,
+    nextStep: DiscoveryStep,
+    nextIsProcessing: boolean,
+  ) {
+    setAgentStep(nextStep);
+    setIsAgentProcessing(nextIsProcessing);
+
+    if (intent !== "unclear") {
+      setActiveIntent(intent);
+    }
+  }
+
+  return (
+    <div className="hero-system-stage" data-active-intent={activeIntent} data-agent-step={agentStep}>
+      <div className="hero-link-field" aria-hidden="true">
+        <span className="hero-link-line hero-link-line-one" />
+        <span className="hero-link-line hero-link-line-two" />
+        <span className="hero-link-line hero-link-line-three" />
+        <span className="hero-link-line hero-link-line-four" />
+      </div>
+      <div className="hero-assistant-stack">
+        <div className="hero-assistant-console">
+          <span className="hero-console-scanline" aria-hidden="true" />
+          <CoreAiChat locale={locale} onIntentChange={handleIntentChange} />
+        </div>
+        <div className="hero-agent-process-panel" aria-label={processCopy.processLabel}>
+          <span className="hero-agent-process-title">
+            {locale === "en" ? "ASSISTANT PROCESS" : "ASİSTAN SÜRECİ"}
+          </span>
+          <div className="hero-agent-process-steps">
+            {processEntries.map(([key, stepCopy]) => (
+              <div
+                className="hero-agent-process-step"
+                data-state={processStates[key]}
+                key={key}
+              >
+                <span className="hero-agent-process-node" aria-hidden="true">
+                  <QuickIntentIcon
+                    category={
+                      key === "solution.map"
+                        ? activeIntent
+                        : key === "human.review"
+                          ? "unclear"
+                          : "customer_support_website"
+                    }
+                  />
+                </span>
+                <strong>{stepCopy.label}</strong>
+                <span>{stepCopy.detail}</span>
+                <em>{processStates[key]}</em>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <aside className="hero-capability-rail" aria-label={capabilityLabel}>
+        {cards.map((card) => {
+          const cardState = getHeroCapabilityState(
+            card.category,
+            activeIntent,
+            agentStep,
+          );
+
+          return (
+            <div
+              className="hero-capability-card"
+              data-active={cardState === "active"}
+              data-state={cardState}
+              key={card.title}
+            >
+              <span className="hero-capability-icon">
+                <CapabilityIcon type={card.icon} />
+              </span>
+              <strong>{card.title}</strong>
+              <span>{card.status}</span>
+              <em>{cardState}</em>
+            </div>
+          );
+        })}
+      </aside>
     </div>
   );
 }

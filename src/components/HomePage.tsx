@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { CoreAiChat } from "@/components/CoreAiChat";
+import { HeroAgentExperience } from "@/components/CoreAiChat";
 
 type Locale = "tr" | "en";
 
@@ -47,6 +47,13 @@ const heroTelemetry = [
   ["LEAD", "FORM HAZIR"],
   ["TAKİP", "İNSAN ONAYLI"],
   ["ASİSTAN", "DİNLİYOR"],
+];
+
+const heroStatusChips = [
+  ["lead.capture", "active"],
+  ["sales.brief", "ready"],
+  ["ops.route", "online"],
+  ["human.review", "enabled"],
 ];
 
 const infrastructureShowcaseCards = [
@@ -153,6 +160,13 @@ const englishHeroTelemetry = [
   ["ASSISTANT", "LISTENING"],
 ];
 
+const englishHeroStatusChips = [
+  ["lead.capture", "active"],
+  ["sales.brief", "ready"],
+  ["ops.route", "online"],
+  ["human.review", "enabled"],
+];
+
 const englishInfrastructureShowcaseCards = [
   {
     icon: "network",
@@ -219,15 +233,19 @@ const homeCopy = {
     navInfrastructure: "/sistemler",
     langHref: "/en",
     langLabel: "EN",
-    headerCta: "ASİSTANI_BAŞLAT",
+    headerCta: "ASİSTANLA BAŞLA",
     kicker: "// İŞLETMELER İÇİN YAPAY ZEKÂ SİSTEMLERİ",
-    title: "AI müşteri temsilcisi, satış asistanı ve operasyon otomasyonu.",
+    title: "Web sitenizi yaşayan bir AI iş temsilcisine dönüştürün.",
     description:
-      "Hakan Leonardo, işletmeniz için web sitesiyle çalışan AI müşteri temsilcisi, satış/teklif asistanı ve operasyon otomasyonu akışları tasarlar. İlk adım: ihtiyacı netleştiren kısa bir keşif görüşmesi.",
-    primaryCta: "ASİSTANI_BAŞLAT",
-    visionCta: "SİSTEMLERİ_GÖR",
+      "Hakan Leonardo; ziyaretçileri karşılayan, ihtiyacı anlayan, lead toplayan ve satış/operasyon akışlarını insan onaylı şekilde düzenleyen AI sistemleri kurar.",
+    primaryCta: "AI İLE KEŞFET",
+    visionCta: "NASIL ÇALIŞIR?",
     terminalLabel: "Ajan başlangıç terminali",
     telemetryLabel: "Giriş sistem telemetrisi",
+    statusLabel: "Aktif sistem durumları",
+    capabilityLabel: "AI sistem yetkinlikleri",
+    scanLabel: "SİSTEM TARAMASI",
+    scanStatus: "TÜM MODÜLLER NORMAL",
     visionText:
       "Web siteleri, müşteri temsilcileri, satış akışları ve operasyonel süreçler artık yalnızca statik araçlar olmak zorunda değildir. Doğru kurulan yapay zekâ sistemleri; müşteriyi karşılayan, ihtiyacı anlayan, bilgiyi düzenleyen, işi sınıflandıran ve insan ekibine daha temiz bir akış teslim eden yeni bir iş katmanı oluşturur.",
     principle:
@@ -257,15 +275,19 @@ const homeCopy = {
     navInfrastructure: "/systems",
     langHref: "/",
     langLabel: "TR",
-    headerCta: "START_ASSISTANT",
+    headerCta: "START WITH ASSISTANT",
     kicker: "// AI SYSTEMS FOR PRACTICAL BUSINESS WORKFLOWS",
-    title: "AI customer representative, sales assistant, and operations automation.",
+    title: "Turn your website into a living AI business representative.",
     description:
-      "Hakan Leonardo designs AI customer representatives, sales/proposal assistants, and operations automation flows for businesses. The first step is a short discovery conversation that clarifies the need.",
-    primaryCta: "START_ASSISTANT",
-    visionCta: "VIEW_SYSTEMS",
+      "Hakan Leonardo builds AI systems that greet visitors, understand needs, capture leads, and organize sales/operations flows with human approval.",
+    primaryCta: "DISCOVER WITH AI",
+    visionCta: "HOW IT WORKS?",
     terminalLabel: "Agent boot terminal",
     telemetryLabel: "Entry system telemetry",
+    statusLabel: "Active system statuses",
+    capabilityLabel: "AI system capabilities",
+    scanLabel: "SYSTEM SCAN",
+    scanStatus: "ALL MODULES NORMAL",
     visionText:
       "Websites, customer representatives, sales flows, and operational processes no longer have to remain static tools. Properly built AI systems create a new business layer that greets customers, understands needs, organizes information, classifies work, and delivers a cleaner flow to the human team.",
     principle:
@@ -372,6 +394,8 @@ export function HomePage({ locale }: { locale: Locale }) {
     locale === "en" ? englishInfrastructureCards : infrastructureCards;
   const selectedHeroTelemetry =
     locale === "en" ? englishHeroTelemetry : heroTelemetry;
+  const selectedHeroStatusChips =
+    locale === "en" ? englishHeroStatusChips : heroStatusChips;
   const selectedInfrastructureShowcaseCards =
     locale === "en"
       ? englishInfrastructureShowcaseCards
@@ -380,6 +404,7 @@ export function HomePage({ locale }: { locale: Locale }) {
     locale === "en" ? englishHowItWorksCards : howItWorksCards;
   const homeHref = locale === "en" ? "/en#hero" : "#hero";
   const systemsHref = locale === "en" ? "/en#systems" : "#systems";
+  const howItWorksHref = locale === "en" ? "/en#how-it-works" : "#how-it-works";
   const assistantHref = locale === "en" ? "/en#assistant" : "#assistant";
 
   return (
@@ -407,34 +432,59 @@ export function HomePage({ locale }: { locale: Locale }) {
 
       <main className="site-main">
         <section className="section-shell hero-section" id="hero">
+          <div className="hero-motion-layer" aria-hidden="true">
+            <span className="hero-glow hero-glow-primary" />
+            <span className="hero-glow hero-glow-secondary" />
+            <span className="hero-signal hero-signal-one" />
+            <span className="hero-signal hero-signal-two" />
+            <span className="hero-node hero-node-alpha" />
+            <span className="hero-node hero-node-beta" />
+            <span className="hero-node hero-node-gamma" />
+          </div>
           <span className="corner-bracket corner-bracket-top" aria-hidden="true" />
           <span className="corner-bracket corner-bracket-bottom" aria-hidden="true" />
           <div className="hero-copy">
-            <p className="section-kicker">{copy.kicker}</p>
             <h1>{copy.title}</h1>
             <p className="hero-description">{copy.description}</p>
+            <div className="hero-status-grid" aria-label={copy.statusLabel}>
+              {selectedHeroStatusChips.map(([label, value]) => (
+                <div className="hero-status-chip" key={label}>
+                  <span>{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
             <div className="button-group">
               <a className="button-primary" href={assistantHref}>
                 <span>{copy.primaryCta}</span>
                 <span aria-hidden="true">-&gt;</span>
               </a>
-              <a className="button-secondary" href={systemsHref}>
+              <a className="button-secondary" href={howItWorksHref}>
                 {copy.visionCta}
               </a>
             </div>
           </div>
 
           <div className="hero-assistant" id="assistant">
-            <CoreAiChat locale={copy.chat} />
+            <HeroAgentExperience
+              capabilityLabel={copy.capabilityLabel}
+              locale={copy.chat}
+            />
           </div>
 
-          <div className="hero-telemetry" aria-label={copy.telemetryLabel}>
-            {selectedHeroTelemetry.map(([label, value]) => (
-              <div className="hero-telemetry-cell" key={label}>
-                <span>{label}</span>
-                <strong>{value}</strong>
-              </div>
-            ))}
+          <div className="hero-scan-strip" aria-label={copy.telemetryLabel}>
+            <div className="hero-scan-status">
+              <span className="hero-scan-wave" aria-hidden="true" />
+              <span>{copy.scanLabel}</span>
+              <strong>{copy.scanStatus}</strong>
+            </div>
+            <div className="hero-scan-metrics">
+              {selectedHeroTelemetry.map(([label, value]) => (
+                <span key={label}>
+                  {label} <strong>{value}</strong>
+                </span>
+              ))}
+            </div>
           </div>
         </section>
 
