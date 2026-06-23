@@ -3246,7 +3246,7 @@ h3 {
 
   .core-chat-input-wrap {
     gap: 6px;
-    padding: 0 8px;
+    padding: 0 10px;
   }
 
   .core-chat-input-wrap span {
@@ -3255,6 +3255,11 @@ h3 {
 
   .core-chat-submit {
     padding: 0 12px;
+  }
+
+  .core-chat-input {
+    font-size: 16px;
+    line-height: 1.35;
   }
 
   .core-chat-contact-panel {
@@ -3277,8 +3282,10 @@ h3 {
   .core-chat-form-grid input,
   .core-chat-form-grid select,
   .core-chat-form-grid textarea {
-    padding: 9px 10px;
-    font-size: 11px;
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 16px;
+    line-height: 1.35;
   }
 
   .footer-cta {
