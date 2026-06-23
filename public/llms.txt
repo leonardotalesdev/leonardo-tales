@@ -1,0 +1,35 @@
+# Hakan Leonardo
+
+Hakan Leonardo is a public business and services website for practical AI systems.
+
+Production URL fallback: https://hakanleonardo.com
+Default language: Turkish
+Secondary language: English
+
+Primary services:
+- AI customer representative + website
+- AI sales and proposal assistant
+- AI operations automation
+
+Primary routes:
+- / — Turkish homepage
+- /en — English homepage
+- /vizyon — Turkish vision page
+- /en/vision — English vision page
+- /manifesto — redirects to /vizyon
+- /en/manifesto — redirects to /en/vision
+
+Who it helps:
+Hakan Leonardo helps businesses, agencies, founders, and professional service providers clarify how AI can improve customer communication, sales/proposal workflows, and recurring operations.
+
+What it builds:
+Hakan Leonardo designs practical, bounded AI business systems. The current MVP includes a deterministic AI discovery assistant and lead capture form. It is not a broad platform, agent operating system, or software factory.
+
+Share preview:
+- Site name: Hakan Leonardo
+- Primary title: Hakan Leonardo | Yapay Zekâ İş Sistemleri
+- Primary description: AI customer representative, sales/proposal assistant, and operations automation for businesses.
+- OG image: /og/hakan-leonardo-og.png
+
+Important scope note:
+Leonardo Tales Core, Dev, Science, agent OS, and software factory projects are not active products of this public website. They should be treated as future/separate repository work, not as claims made by this site.
